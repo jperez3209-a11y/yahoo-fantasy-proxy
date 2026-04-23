@@ -2,600 +2,337 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-  <title>Diamond Edge — Fantasy Baseball Advisor</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Bebas+Neue&display=swap" rel="stylesheet"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Diamond Edge — Fantasy Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800&family=Barlow:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --bg: #070d1a;
-      --bg2: #0d1628;
-      --surface: rgba(255,255,255,0.04);
-      --border: rgba(255,255,255,0.08);
-      --border2: rgba(255,255,255,0.12);
-      --text: #cbd5e1;
-      --text-bright: #f1f5f9;
-      --text-muted: #475569;
-      --text-dim: #334155;
-      --blue: #3b82f6;
-      --blue-dark: #1d4ed8;
-      --blue-dim: rgba(59,130,246,0.1);
-      --blue-border: rgba(59,130,246,0.25);
-      --font: 'DM Sans', -apple-system, sans-serif;
-      --mono: 'JetBrains Mono', monospace;
-      --display: 'Bebas Neue', sans-serif;
-      --radius: 12px;
-      --header-h: 56px;
+      --bg:#060a12;--bg2:#0b1220;--bg3:#111c2e;
+      --surface:rgba(255,255,255,.04);--surface2:rgba(255,255,255,.07);
+      --border:rgba(255,255,255,.07);--border2:rgba(255,255,255,.12);
+      --text:#94a3b8;--bright:#e2e8f0;--muted:#475569;--dim:#1e293b;
+      --accent:#f59e0b;--accent2:#ef4444;--green:#10b981;--blue:#3b82f6;--bluedark:#1d4ed8;
+      --font:'Barlow',sans-serif;--mono:'JetBrains Mono',monospace;--display:'Barlow Condensed',sans-serif;
     }
-
-    html, body {
-      height: 100%;
-      background: var(--bg);
-      color: var(--text);
-      font-family: var(--font);
-      -webkit-font-smoothing: antialiased;
-      overflow: hidden;
-    }
-
-    ::-webkit-scrollbar { width: 3px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: #1e3a5f; border-radius: 4px; }
-
-    @keyframes pulse {
-      0%,100% { opacity:.3; transform:scale(.8); }
-      50%      { opacity:1; transform:scale(1); }
-    }
-    @keyframes fadeUp {
-      from { opacity:0; transform:translateY(8px); }
-      to   { opacity:1; transform:translateY(0); }
-    }
-    @keyframes slideDown {
-      from { opacity:0; transform:translateY(-6px); }
-      to   { opacity:1; transform:translateY(0); }
-    }
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    #app {
-      display: flex;
-      flex-direction: column;
-      height: 100dvh;
-      background: var(--bg);
-      background-image:
-        radial-gradient(ellipse at 20% 0%, rgba(30,58,138,.28) 0%, transparent 55%),
-        radial-gradient(ellipse at 80% 100%, rgba(15,23,42,.6) 0%, transparent 50%);
-    }
-
-    .screen { display: none; flex-direction: column; flex: 1; overflow: hidden; }
-    .screen.active { display: flex; }
-
-    .auth-wrap {
-      flex: 1; display: flex; align-items: center; justify-content: center;
-      padding: 20px 16px; overflow-y: auto;
-    }
-    .auth-card {
-      width: 100%; max-width: 420px;
-      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
-      border-radius: 20px; padding: 36px 28px; animation: fadeUp .3s ease;
-    }
-    .auth-logo { text-align: center; margin-bottom: 28px; }
-    .auth-logo .icon {
-      width: 52px; height: 52px;
-      background: linear-gradient(135deg, var(--blue-dark), var(--blue));
-      border-radius: 14px; display: flex; align-items: center; justify-content: center;
-      font-size: 24px; margin: 0 auto 14px; box-shadow: 0 0 30px rgba(59,130,246,.3);
-    }
-    .auth-logo .title { font-family: var(--display); font-size: 26px; letter-spacing: .1em; color: var(--text-bright); line-height: 1; }
-    .auth-logo .sub { font-size: 13px; color: var(--text-muted); margin-top: 5px; }
-
-    .field { display: flex; flex-direction: column; gap: 6px; }
-    label.field-label { font-size: 11px; color: #64748b; text-transform: uppercase; letter-spacing: .1em; }
-    input.field-input, textarea.field-input {
-      width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--border);
-      border-radius: 10px; padding: 11px 14px; color: var(--text-bright);
-      font-size: 14px; font-family: var(--mono); outline: none; transition: border-color .15s; -webkit-appearance: none;
-    }
-    input.field-input:focus, textarea.field-input:focus { border-color: rgba(59,130,246,.5); }
-    .password-wrap { position: relative; }
-    .password-wrap input { padding-right: 42px; }
-    .toggle-secret {
-      position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
-      background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 15px; padding: 4px; line-height: 1;
-    }
-
-    .btn { width: 100%; padding: 13px; border: none; border-radius: 10px; font-size: 14px; font-weight: 700; font-family: var(--font); cursor: pointer; transition: all .15s; -webkit-tap-highlight-color: transparent; }
-    .btn-primary { background: linear-gradient(135deg, var(--blue-dark), var(--blue)); color: white; box-shadow: 0 0 20px rgba(59,130,246,.25); }
-    .btn-primary:active { transform: scale(.98); }
-    .btn-primary:disabled { background: rgba(255,255,255,.06); color: var(--text-muted); box-shadow: none; cursor: not-allowed; }
-    .btn-purple { background: linear-gradient(135deg, #7c3aed, #6d28d9); color: white; box-shadow: 0 0 20px rgba(124,58,237,.3); }
-    .btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--text-muted); }
-
-    .info-box { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 10px; padding: 14px; font-size: 13px; color: #94a3b8; line-height: 1.75; }
-    .info-box.blue { background: rgba(59,130,246,.08); border-color: rgba(59,130,246,.2); }
-    .info-box.purple { background: rgba(124,58,237,.08); border-color: rgba(124,58,237,.25); color: #a78bfa; }
-    .info-box.red { background: rgba(239,68,68,.08); border-color: rgba(239,68,68,.25); color: #fca5a5; }
-    .info-box code { font-family: var(--mono); font-size: 11px; background: rgba(59,130,246,.15); color: #60a5fa; padding: 1px 5px; border-radius: 3px; }
-
-    .stack { display: flex; flex-direction: column; }
-    .gap-4{gap:4px}.gap-8{gap:8px}.gap-12{gap:12px}.gap-14{gap:14px}.gap-16{gap:16px}
-
-    #header {
-      height: var(--header-h); min-height: var(--header-h);
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0 16px; border-bottom: 1px solid var(--border);
-      background: rgba(7,13,26,.92); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-      position: sticky; top: 0; z-index: 50; flex-shrink: 0;
-    }
-    .header-brand { display: flex; align-items: center; gap: 10px; }
-    .header-icon { width: 32px; height: 32px; background: linear-gradient(135deg, var(--blue-dark), var(--blue)); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 15px; box-shadow: 0 0 16px rgba(59,130,246,.3); flex-shrink: 0; }
-    .header-name { font-family: var(--display); font-size: 18px; letter-spacing: .08em; color: var(--text-bright); line-height: 1; }
-    .header-sub { font-size: 9px; color: var(--text-muted); letter-spacing: .1em; text-transform: uppercase; }
-    .header-actions { display: flex; align-items: center; gap: 6px; }
-
-    .badge { display: inline-flex; align-items: center; gap: 3px; background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 2px 6px; font-family: var(--mono); font-size: 10px; white-space: nowrap; }
-    .badge.gold { background: rgba(251,191,36,.12); border-color: rgba(251,191,36,.35); }
-    .badge-label { color: #64748b; font-size: 9px; }
-    .badge-val { color: var(--text); font-weight: 600; }
-    .badge.gold .badge-val { color: #fbbf24; }
-    .btn-roster { background: var(--blue-dim); border: 1px solid var(--blue-border); border-radius: 6px; padding: 5px 10px; color: #60a5fa; font-size: 11px; font-weight: 600; font-family: var(--font); cursor: pointer; white-space: nowrap; -webkit-tap-highlight-color: transparent; transition: background .15s; }
-    .btn-roster.saved { background: rgba(34,197,94,.1); border-color: rgba(34,197,94,.3); color: #4ade80; }
-
-    #roster-panel { display: none; background: rgba(13,22,40,.98); border-bottom: 1px solid var(--border); padding: 16px; animation: slideDown .2s ease; flex-shrink: 0; }
-    #roster-panel.open { display: block; }
-    #roster-panel textarea { width: 100%; min-height: 110px; resize: vertical; font-size: 13px; line-height: 1.6; }
-    .roster-actions { display: flex; gap: 8px; margin-top: 10px; }
-    .roster-save { background: linear-gradient(135deg, var(--blue-dark), #2563eb); border: none; border-radius: 7px; padding: 8px 16px; color: white; font-size: 13px; font-weight: 600; font-family: var(--font); cursor: pointer; }
-    .roster-cancel { background: transparent; border: 1px solid var(--border); border-radius: 7px; padding: 8px 12px; color: var(--text-muted); font-size: 13px; font-family: var(--font); cursor: pointer; }
-
-    #messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 14px; -webkit-overflow-scrolling: touch; }
-    .msg-row { display: flex; animation: fadeUp .25s ease; }
-    .msg-row.user { justify-content: flex-end; }
-    .msg-row.assistant { justify-content: flex-start; }
-    .msg-avatar { width: 26px; height: 26px; border-radius: 6px; background: linear-gradient(135deg, #1e3a8a, #2563eb); display: flex; align-items: center; justify-content: center; font-size: 12px; margin-right: 8px; margin-top: 2px; flex-shrink: 0; box-shadow: 0 0 10px rgba(37,99,235,.3); }
-    .msg-bubble { max-width: min(82%, 520px); padding: 11px 14px; font-size: 14px; line-height: 1.65; border-radius: 4px 14px 14px 14px; }
-    .msg-row.user .msg-bubble { background: linear-gradient(135deg, var(--blue-dark), #2563eb); color: white; border-radius: 14px 14px 4px 14px; box-shadow: 0 4px 16px rgba(29,78,216,.2); }
-    .msg-row.assistant .msg-bubble { background: var(--surface); border: 1px solid rgba(255,255,255,.07); color: var(--text); }
-    .msg-bubble .m-header { font-size: 11px; font-weight: 700; color: #60a5fa; text-transform: uppercase; letter-spacing: .06em; margin-top: 10px; margin-bottom: 3px; }
-    .msg-bubble .m-bullet { display: flex; gap: 7px; margin-top: 3px; padding-left: 2px; }
-    .msg-bubble .m-bullet-dot { color: var(--blue); flex-shrink: 0; margin-top: 1px; }
-    .msg-bubble .m-num { display: flex; gap: 8px; margin-top: 3px; padding-left: 2px; }
-    .msg-bubble .m-num-n { color: var(--blue); font-family: var(--mono); font-weight: 700; flex-shrink: 0; min-width: 14px; }
-    .msg-bubble .m-spacer { height: 7px; }
-    .msg-bubble strong { color: var(--text-bright); font-weight: 700; }
-    .msg-bubble em { color: #94a3b8; }
-    .msg-bubble code { background: rgba(59,130,246,.15); color: #60a5fa; padding: 1px 4px; border-radius: 3px; font-family: var(--mono); font-size: .88em; }
-
-    .typing-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--blue); animation: pulse 1.2s ease-in-out infinite; display: inline-block; }
-    .typing-dot:nth-child(2) { animation-delay: .2s; }
-    .typing-dot:nth-child(3) { animation-delay: .4s; }
-    .typing-row { display: flex; align-items: center; gap: 5px; padding: 4px 0; }
-
-    #quick-prompts { padding: 0 16px 10px; display: flex; gap: 7px; flex-wrap: wrap; flex-shrink: 0; }
-    .quick-btn { background: var(--blue-dim); border: 1px solid var(--blue-border); border-radius: 6px; padding: 6px 11px; color: #60a5fa; font-size: 12px; font-family: var(--font); cursor: pointer; -webkit-tap-highlight-color: transparent; transition: background .15s; }
-    .quick-btn:active { background: rgba(59,130,246,.2); }
-
-    #input-bar { border-top: 1px solid var(--border); padding: 10px 12px; background: rgba(7,13,26,.96); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); flex-shrink: 0; padding-bottom: max(10px, env(safe-area-inset-bottom)); }
-    .input-row { display: flex; gap: 8px; align-items: flex-end; background: var(--surface); border: 1px solid var(--border2); border-radius: var(--radius); padding: 9px 12px; }
-    #msg-input { flex: 1; background: transparent; border: none; color: var(--text-bright); font-size: 15px; line-height: 1.45; font-family: var(--font); resize: none; max-height: 130px; overflow-y: auto; outline: none; -webkit-appearance: none; }
-    #msg-input::placeholder { color: var(--text-dim); }
-    #send-btn { width: 34px; height: 34px; flex-shrink: 0; background: var(--blue-dim); border: none; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all .15s; -webkit-tap-highlight-color: transparent; }
-    #send-btn.ready { background: linear-gradient(135deg, var(--blue-dark), var(--blue)); box-shadow: 0 0 14px rgba(59,130,246,.3); }
-    #send-btn svg path { stroke: var(--text-muted); }
-    #send-btn.ready svg path { stroke: white; }
-    .input-hint { font-size: 10px; color: var(--text-dim); text-align: center; margin-top: 6px; }
-
-    .spinner { width: 20px; height: 20px; border: 2px solid rgba(59,130,246,.2); border-top-color: var(--blue); border-radius: 50%; animation: spin .8s linear infinite; margin: 0 auto; }
-
-    @media (max-width: 480px) {
-      .auth-card { padding: 28px 20px; border-radius: 16px; }
-      .badge { display: none; }
-      .header-sub { display: none; }
-      .msg-bubble { font-size: 13.5px; }
-      #messages { padding: 12px; gap: 12px; }
-      .input-hint { display: none; }
-    }
-
-    .hidden { display: none !important; }
-    .text-center { text-align: center; }
-    .text-bright { color: var(--text-bright); }
-    .text-muted { color: var(--text-muted); }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--font);font-size:14px;-webkit-font-smoothing:antialiased}
+    ::-webkit-scrollbar{width:4px;height:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--dim);border-radius:4px}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    @keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+    @keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
+    #app{display:flex;flex-direction:column;min-height:100vh}
+    .auth-screen{flex:1;display:flex;align-items:center;justify-content:center;padding:24px;min-height:100vh;background:var(--bg);background-image:radial-gradient(ellipse at 10% 10%,rgba(245,158,11,.06) 0%,transparent 50%),radial-gradient(ellipse at 90% 90%,rgba(59,130,246,.08) 0%,transparent 50%)}
+    .auth-card{width:100%;max-width:400px;background:var(--bg2);border:1px solid var(--border2);border-radius:16px;padding:36px 32px;animation:fadeIn .4s ease}
+    .auth-logo{display:flex;flex-direction:column;align-items:center;gap:10px;margin-bottom:28px}
+    .auth-logo .badge{width:56px;height:56px;background:linear-gradient(135deg,var(--accent),#d97706);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;box-shadow:0 0 40px rgba(245,158,11,.25)}
+    .auth-logo h1{font-family:var(--display);font-size:28px;font-weight:800;letter-spacing:.08em;color:var(--bright)}
+    .auth-logo p{font-size:13px;color:var(--muted)}
+    .field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+    .field label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
+    .field input{background:rgba(255,255,255,.05);border:1px solid var(--border2);border-radius:8px;padding:10px 12px;color:var(--bright);font-size:13px;font-family:var(--mono);outline:none;transition:border-color .15s;width:100%}
+    .field input:focus{border-color:rgba(245,158,11,.5)}
+    .pw-wrap{position:relative}.pw-wrap input{padding-right:40px}
+    .pw-toggle{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:14px}
+    .btn{width:100%;padding:12px;border:none;border-radius:8px;font-size:14px;font-weight:700;font-family:var(--font);cursor:pointer;transition:all .15s;letter-spacing:.02em}
+    .btn-gold{background:linear-gradient(135deg,var(--accent),#d97706);color:#000;box-shadow:0 0 20px rgba(245,158,11,.25)}
+    .btn-blue{background:linear-gradient(135deg,var(--bluedark),var(--blue));color:#fff;box-shadow:0 0 20px rgba(59,130,246,.2)}
+    .btn-ghost{background:transparent;border:1px solid var(--border2);color:var(--muted)}
+    .btn:disabled{opacity:.4;cursor:not-allowed}.btn:not(:disabled):active{transform:scale(.98)}.btn+.btn{margin-top:8px}
+    .info-box{border-radius:8px;padding:12px 14px;font-size:12px;line-height:1.7;margin-bottom:14px}
+    .info-gold{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);color:#fbbf24}
+    .info-blue{background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.2);color:#93c5fd}
+    .info-purple{background:rgba(139,92,246,.08);border:1px solid rgba(139,92,246,.2);color:#c4b5fd}
+    .info-red{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);color:#fca5a5}
+    .hidden{display:none!important}
+    .step{display:flex;flex-direction:column;gap:0}
+    #dashboard{display:none;flex-direction:column;min-height:100vh}
+    #dashboard.active{display:flex}
+    #topbar{height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;background:rgba(6,10,18,.95);border-bottom:1px solid var(--border);backdrop-filter:blur(20px);position:sticky;top:0;z-index:100;flex-shrink:0}
+    .topbar-left{display:flex;align-items:center;gap:12px}
+    .topbar-logo{width:30px;height:30px;background:linear-gradient(135deg,var(--accent),#d97706);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;box-shadow:0 0 14px rgba(245,158,11,.3)}
+    .topbar-title{font-family:var(--display);font-size:17px;font-weight:800;letter-spacing:.08em;color:var(--bright)}
+    .topbar-season{font-family:var(--mono);font-size:10px;color:var(--muted);background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:2px 7px}
+    .topbar-right{display:flex;align-items:center;gap:8px}
+    .status-pill{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:10px;padding:3px 8px;border-radius:20px}
+    .status-pill.connected{background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.25);color:#34d399}
+    .status-pill.loading{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.25);color:#fbbf24}
+    .status-dot{width:6px;height:6px;border-radius:50%;background:currentColor;animation:pulse 2s infinite}
+    #tabs{display:flex;gap:0;border-bottom:1px solid var(--border);background:var(--bg2);padding:0 20px;flex-shrink:0}
+    .tab{padding:12px 18px;font-family:var(--display);font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;background:transparent;border-top:none;border-left:none;border-right:none}
+    .tab:hover{color:var(--bright)}.tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+    .controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:12px 20px;background:var(--bg2);border-bottom:1px solid var(--border);flex-shrink:0}
+    .window-toggle{display:flex;gap:0}
+    .wt-btn{padding:5px 12px;font-family:var(--mono);font-size:11px;font-weight:600;background:var(--surface);border:1px solid var(--border2);color:var(--muted);cursor:pointer;transition:all .15s}
+    .wt-btn:first-child{border-radius:6px 0 0 6px}.wt-btn:last-child{border-radius:0 6px 6px 0}
+    .wt-btn.active{background:rgba(245,158,11,.15);border-color:rgba(245,158,11,.4);color:var(--accent)}
+    .pos-filter{display:flex;gap:4px;flex-wrap:wrap}
+    .pos-btn{padding:4px 9px;font-family:var(--mono);font-size:10px;font-weight:600;background:var(--surface);border:1px solid var(--border);color:var(--muted);cursor:pointer;border-radius:4px;transition:all .15s}
+    .pos-btn.active{background:rgba(59,130,246,.15);border-color:rgba(59,130,246,.4);color:#93c5fd}
+    .search-box{margin-left:auto;background:var(--surface);border:1px solid var(--border2);border-radius:6px;padding:5px 10px;color:var(--bright);font-size:12px;font-family:var(--font);outline:none;width:160px}
+    .search-box::placeholder{color:var(--muted)}
+    #content{flex:1;overflow-y:auto;padding:20px}
+    .panel{background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:16px;animation:fadeIn .3s ease}
+    .panel-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--border);background:rgba(255,255,255,.02)}
+    .panel-title{font-family:var(--display);font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--bright)}
+    .panel-count{font-family:var(--mono);font-size:10px;color:var(--muted);background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:2px 7px}
+    .tbl-wrap{overflow-x:auto}
+    table{width:100%;border-collapse:collapse}
+    thead th{padding:8px 10px;font-family:var(--mono);font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;text-align:left;white-space:nowrap;border-bottom:1px solid var(--border);cursor:pointer;user-select:none;background:rgba(255,255,255,.02);transition:color .15s}
+    thead th:hover{color:var(--bright)}thead th.sorted{color:var(--accent)}
+    tbody tr{border-bottom:1px solid rgba(255,255,255,.03);transition:background .1s}
+    tbody tr:hover{background:rgba(255,255,255,.03)}tbody tr:last-child{border-bottom:none}
+    td{padding:9px 10px;font-size:13px;color:var(--text);white-space:nowrap}
+    td.name-cell{color:var(--bright);font-weight:600}td.team-cell{font-family:var(--mono);font-size:11px;color:var(--muted)}
+    td.num{font-family:var(--mono);font-size:12px;text-align:right}
+    td.good{color:var(--green)}td.bad{color:var(--accent2)}td.warn{color:var(--accent)}
+    .val-great{color:#10b981;font-weight:600}.val-good{color:#34d399}.val-avg{color:var(--text)}.val-poor{color:#f59e0b}.val-bad{color:#ef4444}
+    .park-badge{display:inline-block;padding:1px 6px;border-radius:3px;font-family:var(--mono);font-size:10px;font-weight:600}
+    .park-hitter{background:rgba(16,185,129,.12);color:#34d399;border:1px solid rgba(16,185,129,.2)}
+    .park-neutral{background:rgba(255,255,255,.06);color:var(--muted);border:1px solid var(--border)}
+    .park-pitcher{background:rgba(239,68,68,.1);color:#f87171;border:1px solid rgba(239,68,68,.2)}
+    .empty{text-align:center;padding:48px 24px;color:var(--muted)}
+    .empty .empty-icon{font-size:32px;margin-bottom:12px}
+    .empty p{font-size:13px;line-height:1.6}
+    .spinner{width:18px;height:18px;border:2px solid rgba(245,158,11,.2);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;display:inline-block}
+    #reconnect-btn{font-family:var(--mono);font-size:10px;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.25);color:var(--accent);border-radius:5px;padding:4px 10px;cursor:pointer;transition:background .15s}
+    #reconnect-btn:hover{background:rgba(245,158,11,.2)}
+    @media(max-width:640px){#content{padding:12px}.controls{padding:10px 12px}#tabs{padding:0 12px}.tab{padding:10px 12px;font-size:12px}}
   </style>
 </head>
 <body>
 <div id="app">
 
-  <div id="screen-creds" class="screen active">
-    <div class="auth-wrap">
-      <div class="auth-card">
-        <div class="auth-logo">
-          <div class="icon">⚾</div>
-          <div class="title">DIAMOND EDGE</div>
-          <div class="sub">Connect your Yahoo Fantasy account</div>
-        </div>
-        <div class="stack gap-16">
-          <div class="field">
-            <label class="field-label">Client ID (Consumer Key)</label>
-            <input id="client-id" class="field-input" type="text" placeholder="dj0y..." autocomplete="off" autocorrect="off" spellcheck="false"/>
-          </div>
-          <div class="field">
-            <label class="field-label">Client Secret (Consumer Secret)</label>
-            <div class="password-wrap">
-              <input id="client-secret" class="field-input" type="password" placeholder="••••••••••••••••" autocomplete="off"/>
-              <button class="toggle-secret" onclick="toggleSecret()" id="secret-toggle">👁</button>
-            </div>
-          </div>
-          <div class="info-box blue" style="font-size:12px;">
-            🔒 Your credentials stay in your browser and are only sent to Yahoo's own OAuth servers — never stored anywhere else.
-          </div>
-          <button class="btn btn-primary" id="creds-btn" onclick="saveCreds()" disabled>
-            Connect to Yahoo Fantasy →
-          </button>
-        </div>
+  <div id="screen-creds" class="auth-screen">
+    <div class="auth-card">
+      <div class="auth-logo">
+        <div class="badge">&#9918;</div>
+        <h1>DIAMOND EDGE</h1>
+        <p>Fantasy Baseball Dashboard</p>
+      </div>
+      <div class="field"><label>Client ID (Consumer Key)</label><input id="cid" type="text" placeholder="dj0y..." autocomplete="off" spellcheck="false"/></div>
+      <div class="field"><label>Client Secret (Consumer Secret)</label><div class="pw-wrap"><input id="csec" type="password" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" autocomplete="off"/><button class="pw-toggle" onclick="togglePw()">&#128065;</button></div></div>
+      <div class="info-box info-gold" style="font-size:11px;">&#128274; Credentials stay in your browser &mdash; only sent to Yahoo&rsquo;s OAuth servers.</div>
+      <button class="btn btn-gold" id="creds-btn" onclick="saveCreds()" disabled>Connect to Yahoo Fantasy &rarr;</button>
+    </div>
+  </div>
+
+  <div id="screen-oauth" class="auth-screen hidden">
+    <div class="auth-card">
+      <div class="auth-logo">
+        <div class="badge">&#128273;</div>
+        <h1>AUTHORIZE</h1>
+        <p>Grant read-only access to your fantasy data</p>
+      </div>
+      <div id="oauth-idle" class="step">
+        <div class="info-box info-blue"><strong style="color:#e2e8f0">How it works:</strong><br/>1. Click below &mdash; Yahoo opens in a new tab<br/>2. Log in and click <strong style="color:#e2e8f0">Agree</strong><br/>3. You&rsquo;ll land on an error page &mdash; that&rsquo;s expected<br/>4. Copy just the <code style="font-family:monospace;font-size:11px;background:rgba(59,130,246,.2);padding:1px 4px;border-radius:3px;">code=</code> value from the URL and paste below</div>
+        <button class="btn btn-blue" onclick="startAuth()">&#128273; Open Yahoo Authorization</button>
+        <button class="btn btn-ghost" onclick="skipAuth()">Skip &mdash; I&rsquo;ll enter roster manually</button>
+      </div>
+      <div id="oauth-waiting" class="step hidden">
+        <div class="info-box info-purple">&#9989; Yahoo tab is open. After authorizing, copy the <code style="font-family:monospace;font-size:11px">code=</code> value from the URL bar and paste below.</div>
+        <div class="field"><label>Authorization Code</label><input id="auth-code" type="text" placeholder="Paste full URL or just the code value" autocomplete="off" spellcheck="false"/></div>
+        <button class="btn btn-gold" id="exchange-btn" onclick="exchangeCode()" disabled>Connect &rarr;</button>
+        <button class="btn btn-ghost" onclick="resetOAuth()">&larr; Go back</button>
+      </div>
+      <div id="oauth-exchanging" class="step hidden" style="text-align:center;padding:24px 0;">
+        <div class="spinner"></div>
+        <div style="color:#fbbf24;margin-top:14px;font-size:13px;">Connecting to Yahoo...</div>
+      </div>
+      <div id="oauth-error" class="step hidden">
+        <div class="info-box info-red"><strong>Token exchange failed.</strong><br/><pre id="oauth-err-msg" style="margin-top:8px;font-size:11px;white-space:pre-wrap;word-break:break-all;background:rgba(0,0,0,.3);padding:8px;border-radius:4px;max-height:120px;overflow-y:auto;"></pre></div>
+        <button class="btn btn-gold" onclick="resetOAuth()">Try Again</button>
+        <button class="btn btn-ghost" onclick="skipAuth()">Skip &mdash; enter roster manually</button>
       </div>
     </div>
   </div>
 
-  <div id="screen-oauth" class="screen">
-    <div class="auth-wrap">
-      <div class="auth-card">
-        <div class="auth-logo">
-          <div class="icon">🔑</div>
-          <div class="title">AUTHORIZE YAHOO</div>
-          <div class="sub">Grant read-only access to your fantasy data</div>
+  <div id="dashboard">
+    <div id="topbar">
+      <div class="topbar-left">
+        <div class="topbar-logo">&#9918;</div>
+        <span class="topbar-title">DIAMOND EDGE</span>
+        <span class="topbar-season">MLB 2025</span>
+      </div>
+      <div class="topbar-right">
+        <span class="status-pill loading" id="status-pill"><span class="status-dot"></span><span id="status-text">Loading...</span></span>
+        <button id="reconnect-btn" onclick="reconnect()" style="display:none">&#8635; Reconnect</button>
+      </div>
+    </div>
+
+    <div id="tabs">
+      <button class="tab active" onclick="switchTab('roster')">My Roster</button>
+      <button class="tab" onclick="switchTab('waiver')">Waiver Wire</button>
+    </div>
+
+    <div id="tab-roster">
+      <div class="controls">
+        <div class="window-toggle">
+          <button class="wt-btn active" onclick="setWindow(7,this)">7D</button>
+          <button class="wt-btn" onclick="setWindow(14,this)">14D</button>
+          <button class="wt-btn" onclick="setWindow(30,this)">30D</button>
         </div>
-        <div id="oauth-idle" class="stack gap-14">
-          <div class="info-box">
-            <strong class="text-bright">How it works:</strong><br/>
-            1. Tap below — Yahoo opens in a new tab<br/>
-            2. Log in and tap <strong class="text-bright">Agree</strong><br/>
-            3. You'll land on an error page — that's expected<br/>
-            4. Copy the <code>code=</code> value from the URL and paste it below
-          </div>
-          <button class="btn btn-purple" onclick="startAuth()">🔑 Open Yahoo Authorization</button>
-          <button class="btn btn-ghost" onclick="skipOAuth()">Skip — use manual roster instead</button>
+        <span style="font-size:11px;color:var(--muted);margin-left:4px;">Recent window</span>
+        <div style="margin-left:auto;display:flex;gap:8px;align-items:center;">
+          <span style="font-family:var(--mono);font-size:10px;color:var(--muted);">SORT BY</span>
+          <select id="roster-sort" onchange="renderRoster()" style="background:var(--surface);border:1px solid var(--border2);border-radius:6px;padding:4px 8px;color:var(--bright);font-size:11px;font-family:var(--mono);outline:none;">
+            <option value="pts">Fantasy Pts</option>
+            <option value="xwoba">xwOBA</option>
+            <option value="barrel">Barrel%</option>
+            <option value="hardhit">Hard Hit%</option>
+            <option value="xera">xERA</option>
+            <option value="csw">CSW%</option>
+            <option value="whiff">Whiff%</option>
+          </select>
         </div>
-        <div id="oauth-waiting" class="stack gap-14 hidden">
-          <div class="info-box purple">
-            ✅ Yahoo auth tab is open.<br/><br/>
-            After authorizing, you'll see an error page. Look at the URL — it contains:<br/>
-            <code style="word-break:break-all;display:block;margin-top:6px;">https://localhost/?code=<strong style="color:#fbbf24;">COPY_THIS</strong>&amp;state=...</code>
+      </div>
+      <div id="content" style="padding:16px 20px;">
+        <div class="panel" id="batters-panel">
+          <div class="panel-header"><span class="panel-title">&#9876; Batters</span><span class="panel-count" id="batter-count">&mdash;</span></div>
+          <div class="tbl-wrap">
+            <table><thead><tr>
+              <th onclick="sortTable('batters','name')">Player <span class="sort-arrow">&updownarrow;</span></th>
+              <th onclick="sortTable('batters','pos')">Pos</th>
+              <th onclick="sortTable('batters','team')">Team</th>
+              <th onclick="sortTable('batters','pts')" class="sorted">Pts <span class="sort-arrow">&darr;</span></th>
+              <th onclick="sortTable('batters','xwoba')">xwOBA</th>
+              <th onclick="sortTable('batters','barrel')">Barrel%</th>
+              <th onclick="sortTable('batters','hardhit')">HardHit%</th>
+              <th onclick="sortTable('batters','ev')">AvgEV</th>
+              <th onclick="sortTable('batters','kpct')">K%</th>
+              <th onclick="sortTable('batters','bbpct')">BB%</th>
+              <th>Wk Games</th>
+            </tr></thead>
+            <tbody id="batters-body"><tr><td colspan="11"><div class="empty"><div class="empty-icon">&#9203;</div><p>Loading roster...</p></div></td></tr></tbody>
+            </table>
           </div>
-          <div class="field">
-            <label class="field-label">Paste the code value here</label>
-            <input id="code-input" class="field-input" type="text" placeholder="e.g. FPwj7p1a2b3c..." autocomplete="off" autocorrect="off" spellcheck="false"/>
-          </div>
-          <button class="btn btn-primary" id="exchange-btn" onclick="exchangeCode()" disabled>Connect →</button>
-          <button class="btn btn-ghost" onclick="resetOAuth()">← Go back</button>
         </div>
-        <div id="oauth-exchanging" class="stack gap-16 hidden text-center">
-          <div style="padding:20px 0;">
-            <div class="spinner"></div>
-            <div style="color:#60a5fa;margin-top:14px;font-size:14px;">Connecting to Yahoo...</div>
+        <div class="panel" id="pitchers-panel">
+          <div class="panel-header"><span class="panel-title">&#9889; Pitchers</span><span class="panel-count" id="pitcher-count">&mdash;</span></div>
+          <div class="tbl-wrap">
+            <table><thead><tr>
+              <th onclick="sortTable('pitchers','name')">Player</th>
+              <th onclick="sortTable('pitchers','pos')">Pos</th>
+              <th onclick="sortTable('pitchers','team')">Team</th>
+              <th onclick="sortTable('pitchers','pts')" class="sorted">Pts <span class="sort-arrow">&darr;</span></th>
+              <th onclick="sortTable('pitchers','xera')">xERA</th>
+              <th onclick="sortTable('pitchers','xwoba')">xwOBA-against</th>
+              <th onclick="sortTable('pitchers','csw')">CSW%</th>
+              <th onclick="sortTable('pitchers','whiff')">Whiff%</th>
+              <th onclick="sortTable('pitchers','barrel')">Barrel%-against</th>
+              <th onclick="sortTable('pitchers','kpct')">K%</th>
+              <th>Wk Games</th>
+            </tr></thead>
+            <tbody id="pitchers-body"><tr><td colspan="11"><div class="empty"><div class="empty-icon">&#9203;</div><p>Loading roster...</p></div></td></tr></tbody>
+            </table>
           </div>
         </div>
-        <div id="oauth-error" class="stack gap-14 hidden">
-          <div class="info-box red">
-            <strong>Could not complete token exchange.</strong><br/>
-            <span id="error-msg"></span><br/><br/>
-            Authorization codes expire in ~60 seconds. Try the flow again and paste the code quickly.
+      </div>
+    </div>
+
+    <div id="tab-waiver" class="hidden">
+      <div class="controls">
+        <div class="pos-filter" id="pos-filter">
+          <button class="pos-btn active" onclick="filterPos('ALL',this)">ALL</button>
+          <button class="pos-btn" onclick="filterPos('SP',this)">SP</button>
+          <button class="pos-btn" onclick="filterPos('RP',this)">RP</button>
+          <button class="pos-btn" onclick="filterPos('C',this)">C</button>
+          <button class="pos-btn" onclick="filterPos('1B',this)">1B</button>
+          <button class="pos-btn" onclick="filterPos('2B',this)">2B</button>
+          <button class="pos-btn" onclick="filterPos('3B',this)">3B</button>
+          <button class="pos-btn" onclick="filterPos('SS',this)">SS</button>
+          <button class="pos-btn" onclick="filterPos('OF',this)">OF</button>
+        </div>
+        <input class="search-box" id="waiver-search" placeholder="Search players..." oninput="renderWaiver()"/>
+      </div>
+      <div style="padding:16px 20px;">
+        <div class="panel">
+          <div class="panel-header"><span class="panel-title">&#128260; Available Players</span><span class="panel-count" id="waiver-count">&mdash;</span></div>
+          <div class="tbl-wrap">
+            <table><thead><tr>
+              <th onclick="sortWaiver('name')">Player</th>
+              <th onclick="sortWaiver('pos')">Pos</th>
+              <th onclick="sortWaiver('team')">Team</th>
+              <th onclick="sortWaiver('pts')" class="sorted">Pts(Season) <span class="sort-arrow">&darr;</span></th>
+              <th onclick="sortWaiver('xwoba')">xwOBA / xERA</th>
+              <th onclick="sortWaiver('barrel')">Barrel%</th>
+              <th onclick="sortWaiver('hardhit')">HardHit%</th>
+              <th onclick="sortWaiver('kpct')">K%</th>
+              <th onclick="sortWaiver('bbpct')">BB%</th>
+            </tr></thead>
+            <tbody id="waiver-body"><tr><td colspan="9"><div class="empty"><div class="empty-icon">&#9203;</div><p>Loading free agents...</p></div></td></tr></tbody>
+            </table>
           </div>
-          <button class="btn btn-primary" onclick="resetOAuth()">Try Again</button>
-          <button class="btn btn-ghost" onclick="skipOAuth()">Skip — use manual roster instead</button>
         </div>
       </div>
     </div>
   </div>
-
-  <div id="screen-chat" class="screen">
-    <div id="header">
-      <div class="header-brand">
-        <div class="header-icon">⚾</div>
-        <div>
-          <div class="header-name">DIAMOND EDGE</div>
-          <div class="header-sub">Fantasy Baseball Advisor</div>
-        </div>
-      </div>
-      <div class="header-actions">
-        <span class="badge"><span class="badge-label">LEAGUE</span><span class="badge-val">Points</span></span>
-        <span class="badge gold hidden" id="yahoo-badge"><span class="badge-label">YAHOO</span><span class="badge-val">Connected</span></span>
-        <button class="btn-roster" id="roster-btn" onclick="toggleRoster()">📋 Set Roster</button>
-      </div>
-    </div>
-    <div id="roster-panel">
-      <div style="font-size:11px;color:#64748b;text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;">Your Roster — paste by position</div>
-      <textarea id="roster-input" class="field-input" rows="5"
-        placeholder="SP: Gerrit Cole, Framber Valdez...&#10;RP: Emmanuel Clase...&#10;C: Will Smith&#10;1B: Freddie Freeman&#10;2B: Jose Altuve&#10;..."></textarea>
-      <div class="roster-actions">
-        <button class="roster-save" onclick="saveRoster()">Save Roster</button>
-        <button class="roster-cancel" onclick="toggleRoster()">Cancel</button>
-      </div>
-    </div>
-    <div id="messages"></div>
-    <div id="quick-prompts">
-      <button class="quick-btn" onclick="sendQuick(this)">Best SP waiver pickups this week?</button>
-      <button class="quick-btn" onclick="sendQuick(this)">Top batter streamers vs RHP?</button>
-      <button class="quick-btn" onclick="sendQuick(this)">Who should I target in trades?</button>
-      <button class="quick-btn" onclick="sendQuick(this)">Regression candidates on my roster?</button>
-    </div>
-    <div id="input-bar">
-      <div class="input-row">
-        <textarea id="msg-input" rows="1"
-          placeholder="Ask about start/sit, waiver pickups, trades, player deep-dives..."
-          oninput="onInputChange(this)"
-          onkeydown="onInputKey(event)"></textarea>
-        <button id="send-btn" onclick="sendMessage()">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-            <path d="M22 2L11 13" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </button>
-      </div>
-      <div class="input-hint">Statcast-aware · Points league optimized · Enter to send</div>
-    </div>
-  </div>
-
 </div>
+
 <script>
-const STATE = {
-  clientId: '', clientSecret: '', pkceVerifier: '', yahooToken: null,
-  messages: [], rosterOpen: false, rosterSaved: false, manualRoster: '', loading: false,
-};
+const API='https://yahoo-fantasy-proxy.vercel.app';
+const SEASON='2025';
+const ST={clientId:'',clientSecret:'',token:null,leagueKey:null,teamKey:null,rosterPlayers:[],freeAgents:[],savantBatters:{},savantPitchers:{},window:7,rosterSort:{col:'pts',dir:-1},waiverSort:{col:'pts',dir:-1},waiverPos:'ALL',pkceVerifier:''};
+const PARK={COL:130,CIN:115,TEX:112,BOS:110,PHI:108,MIL:107,NYY:106,HOU:105,ATL:104,LAD:103,TOR:102,MIN:101,SEA:100,NYM:100,STL:99,DET:98,CLE:97,WSH:97,SDP:96,OAK:96,MIA:95,LAA:95,BAL:94,SFG:93,PIT:93,CHC:92,CHW:91,KCR:90,TBR:89,ARI:88};
+const WEEK_GAMES={COL:7,CIN:7,TEX:6,BOS:6,PHI:6,MIL:6,NYY:7,HOU:6,ATL:6,LAD:6,TOR:6,MIN:5,SEA:5,NYM:5,STL:6,DET:6,CLE:6,WSH:6,SDP:5,OAK:5,MIA:4,LAA:5,BAL:6,SFG:5,PIT:6,CHC:6,CHW:4,KCR:5,TBR:5,ARI:6};
 
-const PROXY_URL = 'https://yahoo-fantasy-proxy.vercel.app/api/token';
+document.getElementById('cid').addEventListener('input',checkCreds);
+document.getElementById('csec').addEventListener('input',checkCreds);
+function checkCreds(){document.getElementById('creds-btn').disabled=!document.getElementById('cid').value.trim()||!document.getElementById('csec').value.trim();}
+function togglePw(){const i=document.getElementById('csec');i.type=i.type==='password'?'text':'password';}
+function saveCreds(){ST.clientId=document.getElementById('cid').value.trim();ST.clientSecret=document.getElementById('csec').value.trim();const saved=sessionStorage.getItem('de_token');if(saved){ST.token=saved;enterDashboard();return;}showScreen('oauth');}
 
-const SYSTEM_PROMPT = `You are an elite fantasy baseball advisor for a POINTS LEAGUE (season total format). You have deep expertise in:
+function b64url(buf){return btoa(String.fromCharCode(...new Uint8Array(buf))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=/g,'');}
+async function genPKCE(){const v=b64url(crypto.getRandomValues(new Uint8Array(32)));const d=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(v));return{verifier:v,challenge:b64url(d)};}
 
-- Statcast/Baseball Savant metrics: xBA, xERA, xwOBA, xSLG, barrel%, hard-hit%, exit velocity, launch angle, sprint speed, spin rate, whiff%, chase%, CSW%
-- Pitcher splits: vs LHH/RHH, pitch mix effectiveness, spin rate trends, SIERA, FIP, xFIP, BABIP regression
-- Batter splits: platoon splits, vs fastball/breaking/offspeed, spray charts, pull%, oppo%, launch angle tendencies
-- Stadium factors: park factors for HR, doubles, triples, runs — Coors, Fenway, GABP vs pitcher-friendly parks
-- Bullpen/closer situations: leverage index, SV% by closer, hold opportunities
-- Injury/IL context, prospect callups, roster construction
-- Points league optimization: H, 2B, 3B, HR, RBI, R, SB, BB for batters; IP, K, W, SV, HLD, ERA/WHIP penalties for pitchers
+function showOAuthStep(s){['idle','waiting','exchanging','error'].forEach(x=>document.getElementById('oauth-'+x).classList.toggle('hidden',x!==s));}
+async function startAuth(){const pkce=await genPKCE();ST.pkceVerifier=pkce.verifier;const p=new URLSearchParams({client_id:ST.clientId,redirect_uri:'https://localhost',response_type:'code',code_challenge:pkce.challenge,code_challenge_method:'S256'});window.open('https://api.login.yahoo.com/oauth2/request_auth?'+p,'_blank');showOAuthStep('waiting');document.getElementById('auth-code').addEventListener('input',e=>{document.getElementById('exchange-btn').disabled=!e.target.value.trim();});}
+async function exchangeCode(){let raw=document.getElementById('auth-code').value.trim();if(raw.includes('code=')){const m=raw.match(/[?&]code=([^&]+)/);if(m)raw=m[1];}showOAuthStep('exchanging');try{const res=await fetch(API+'/api/token',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code:raw,code_verifier:ST.pkceVerifier,client_id:ST.clientId,client_secret:ST.clientSecret,redirect_uri:'https://localhost'})});const data=await res.json();if(!res.ok)throw new Error(JSON.stringify(data,null,2));ST.token=data.access_token;sessionStorage.setItem('de_token',ST.token);enterDashboard();}catch(e){document.getElementById('oauth-err-msg').textContent=e.message;showOAuthStep('error');}}
+function resetOAuth(){document.getElementById('auth-code').value='';document.getElementById('exchange-btn').disabled=true;showOAuthStep('idle');}
+function skipAuth(){ST.token=null;enterDashboard();}
+function reconnect(){sessionStorage.removeItem('de_token');showScreen('oauth');}
 
-When giving advice:
-- Lead with actionable recommendations first, then explain the Statcast evidence
-- Reference specific metrics (e.g., "his 92nd percentile xwOBA vs RHP suggests...")
-- Consider schedule: upcoming matchups, days off, doubleheaders
-- Flag regression candidates (high BABIP, low strand rate, velocity loss)
-- Be direct and confident. No hedging. The user knows advanced stats.
-- For waiver pickups, rank by priority and explain the points league value
-- For trades, give a clear verdict: accept, decline, or counter — with reasoning
-- If the user gives you roster info or Yahoo data, reference it specifically
+function showScreen(name){['creds','oauth'].forEach(s=>document.getElementById('screen-'+s).classList.toggle('hidden',s!==name));document.getElementById('dashboard').classList.toggle('active',name==='dashboard');if(name!=='dashboard'){document.getElementById('screen-'+name).classList.remove('hidden');}}
+function enterDashboard(){showScreen('dashboard');loadAll();}
 
-Current context: MLB 2025 season. Fantasy points league (season total).`;
+async function loadAll(){setStatus('loading','Loading data...');try{await Promise.all([loadSavant('batter'),loadSavant('pitcher')]);if(ST.token){await loadYahooLeague();await Promise.all([loadRoster(),loadFreeAgents()]);}else{showManualNote();}setStatus('connected','Live · '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}));}catch(e){setStatus('loading','Partial load');console.error(e);}}
 
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById('screen-' + id).classList.add('active');
-}
+async function yahooFetch(endpoint){const res=await fetch(API+'/api/yahoo?endpoint='+encodeURIComponent(endpoint),{headers:{Authorization:'Bearer '+ST.token}});if(res.status===401){document.getElementById('reconnect-btn').style.display='block';throw new Error('Yahoo token expired');}return res.json();}
 
-document.getElementById('client-id').addEventListener('input', checkCredsReady);
-document.getElementById('client-secret').addEventListener('input', checkCredsReady);
+async function loadYahooLeague(){const data=await yahooFetch('users;use_login=1/games;game_codes=mlb/leagues?');try{const games=data.fantasy_content.users[0].user[1].games;ST.leagueKey=games[0].game[1].leagues[0].league[0].league_key;}catch(e){throw new Error('Could not parse league: '+e.message);}}
 
-function checkCredsReady() {
-  const id = document.getElementById('client-id').value.trim();
-  const sec = document.getElementById('client-secret').value.trim();
-  document.getElementById('creds-btn').disabled = !(id && sec);
-}
+async function loadRoster(){if(!ST.leagueKey)return;const teamData=await yahooFetch('league/'+ST.leagueKey+'/teams?');try{const teams=teamData.fantasy_content.league[1].teams;const count=teams.count;for(let i=0;i<count;i++){const team=teams[i].team[0];const mgrs=team.find(t=>t&&t.managers);if(mgrs){const mgr=mgrs.managers[0].manager;if(mgr.is_current_login){ST.teamKey=team.find(t=>t&&t.team_key).team_key;break;}}}}catch(e){}
+if(!ST.teamKey){try{ST.teamKey=teamData.fantasy_content.league[1].teams[0].team[0].find(t=>t&&t.team_key).team_key;}catch(e){}}
+if(!ST.teamKey)return;
+const rd=await yahooFetch('team/'+ST.teamKey+'/roster/players?');try{const players=rd.fantasy_content.team[1].roster[0].players;const count=players.count;ST.rosterPlayers=[];for(let i=0;i<count;i++){const p=players[i].player[0];const s=players[i].player[1];ST.rosterPlayers.push(parsePlayer(p,s));}enrichWithSavant(ST.rosterPlayers);renderRoster();}catch(e){console.error('Roster parse',e);}}
 
-function toggleSecret() {
-  const input = document.getElementById('client-secret');
-  const btn = document.getElementById('secret-toggle');
-  if (input.type === 'password') { input.type = 'text'; btn.textContent = '🙈'; }
-  else { input.type = 'password'; btn.textContent = '👁'; }
-}
+async function loadFreeAgents(){if(!ST.leagueKey)return;const fd=await yahooFetch('league/'+ST.leagueKey+'/players;status=FA;count=100;sort=AR?');try{const players=fd.fantasy_content.league[1].players;const count=Math.min(players.count,100);ST.freeAgents=[];for(let i=0;i<count;i++){const p=players[i].player[0];const s=players[i].player[1];ST.freeAgents.push(parsePlayer(p,s));}enrichWithSavant(ST.freeAgents);renderWaiver();}catch(e){console.error('FA parse',e);}}
 
-function saveCreds() {
-  STATE.clientId = document.getElementById('client-id').value.trim();
-  STATE.clientSecret = document.getElementById('client-secret').value.trim();
-  showScreen('oauth');
-}
+function parsePlayer(pArr,statsObj){const get=key=>{const o=pArr.find(x=>x&&x[key]!==undefined);return o?o[key]:null;};const name=get('full_name')||(get('name')&&get('name').full)||'?';const team=(get('editorial_team_abbr')||'?').toUpperCase();const pos=get('display_position')||(get('eligible_positions')&&get('eligible_positions')[0]&&get('eligible_positions')[0].position)||'?';let pts=0;try{pts=parseFloat(statsObj&&(statsObj.player_points&&statsObj.player_points.total||(statsObj.player_stats&&statsObj.player_stats.stats)))||0;}catch(e){}return{name,team,pos,pts,xwoba:null,barrel:null,hardhit:null,ev:null,kpct:null,bbpct:null,xera:null,csw:null,whiff:null,isPitcher:/SP|RP|\bP\b/.test(pos)};}
 
-function base64URLEncode(buffer) {
-  return btoa(String.fromCharCode(...new Uint8Array(buffer)))
-    .replace(/\+/g,'-').replace(/\//g,'_').replace(/=/g,'');
-}
+async function loadSavant(type){try{const res=await fetch(API+'/api/savant?type='+type+'&season='+SEASON);const rows=await res.json();const map={};if(!Array.isArray(rows))return;rows.forEach(r=>{const a=normName((r.last_name||'')+' '+(r.first_name||''));const b=normName((r.first_name||'')+' '+(r.last_name||''));if(a)map[a]=r;if(b)map[b]=r;});if(type==='batter')ST.savantBatters=map;else ST.savantPitchers=map;}catch(e){console.error('Savant',type,e);}}
+function normName(n){return n.toLowerCase().replace(/[^a-z ]/g,'').replace(/\s+/g,' ').trim();}
+function enrichWithSavant(players){players.forEach(p=>{const key=normName(p.name);const src=p.isPitcher?ST.savantPitchers:ST.savantBatters;let row=src[key];if(!row){const last=key.split(' ').pop();const cands=Object.entries(src).filter(([k])=>k.startsWith(last)||k.endsWith(last));if(cands.length===1)row=cands[0][1];}if(row){p.xwoba=parseFloat(row.xwoba)||null;p.barrel=parseFloat(row.barrel_batted_rate)||null;p.hardhit=parseFloat(row.hard_hit_percent)||null;p.ev=parseFloat(row.exit_velocity_avg)||null;p.kpct=parseFloat(row.k_percent)||null;p.bbpct=parseFloat(row.bb_percent)||null;p.xera=parseFloat(row.xera)||null;p.csw=parseFloat(row.csw_rate)||null;p.whiff=parseFloat(row.whiff_percent)||null;}});}
+function showManualNote(){document.getElementById('batters-body').innerHTML='<tr><td colspan="11"><div class="empty"><div class="empty-icon">&#128203;</div><p>No Yahoo connection &mdash; reconnect to see your roster.<br/>Statcast data is loaded and ready.</p></div></td></tr>';document.getElementById('pitchers-body').innerHTML='<tr><td colspan="11"><div class="empty"></div></td></tr>';}
 
-async function generatePKCE() {
-  const verifier = base64URLEncode(crypto.getRandomValues(new Uint8Array(32)));
-  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(verifier));
-  const challenge = base64URLEncode(digest);
-  return { verifier, challenge };
-}
+function renderRoster(){const batters=ST.rosterPlayers.filter(p=>!p.isPitcher);const pitchers=ST.rosterPlayers.filter(p=>p.isPitcher);const col=document.getElementById('roster-sort').value;document.getElementById('batter-count').textContent=batters.length+' players';document.getElementById('pitcher-count').textContent=pitchers.length+' players';renderPlayerTable('batters-body',sortPlayers(batters,col),'batter');renderPlayerTable('pitchers-body',sortPlayers(pitchers,col),'pitcher');}
+function sortPlayers(arr,col){return[...arr].sort((a,b)=>{const av=a[col]??-999,bv=b[col]??-999;const inv=['xera'].includes(col)?1:-1;return inv*(bv-av);});}
+function renderPlayerTable(id,players,type){const tbody=document.getElementById(id);if(!players.length){tbody.innerHTML='<tr><td colspan="11"><div class="empty"><div class="empty-icon">&#9918;</div><p>No players</p></div></td></tr>';return;}tbody.innerHTML=players.map(p=>{const pf=PARK[p.team]||100;const pb=pf>=108?'park-hitter':pf<=94?'park-pitcher':'park-neutral';const wg=WEEK_GAMES[p.team]||5;const wgc=wg>=7?'val-great':wg>=6?'val-good':wg<=4?'val-poor':'val-avg';const sched='<span class="'+wgc+'" style="font-family:var(--mono);font-size:11px">'+wg+'G</span> <span style="color:var(--muted);font-size:10px">this wk</span>';const pos='<span style="font-family:var(--mono);font-size:10px;color:var(--blue);background:rgba(59,130,246,.1);border-radius:3px;padding:2px 5px">'+p.pos+'</span>';const park='<span class="park-badge '+pb+'">'+pf+'</span>';if(type==='batter'){return'<tr><td class="name-cell">'+p.name+'</td><td>'+pos+'</td><td class="team-cell">'+p.team+' '+park+'</td><td class="num '+(p.pts>=300?'good':p.pts>0?'':'')+'">'+( p.pts>0?p.pts.toFixed(1):'&mdash;')+'</td><td class="num">'+sc(p.xwoba,'xwoba')+'</td><td class="num">'+sc(p.barrel,'barrel')+'</td><td class="num">'+sc(p.hardhit,'hardhit')+'</td><td class="num">'+(p.ev?p.ev.toFixed(1):'&mdash;')+'</td><td class="num">'+(p.kpct?p.kpct.toFixed(1)+'%':'&mdash;')+'</td><td class="num">'+(p.bbpct?p.bbpct.toFixed(1)+'%':'&mdash;')+'</td><td>'+sched+'</td></tr>';}else{return'<tr><td class="name-cell">'+p.name+'</td><td>'+pos+'</td><td class="team-cell">'+p.team+' '+park+'</td><td class="num '+(p.pts>=300?'good':p.pts>0?'':'')+'">'+( p.pts>0?p.pts.toFixed(1):'&mdash;')+'</td><td class="num">'+sc(p.xera,'xera')+'</td><td class="num">'+sc(p.xwoba,'xwoba_p')+'</td><td class="num">'+(p.csw?p.csw.toFixed(1)+'%':'&mdash;')+'</td><td class="num">'+(p.whiff?p.whiff.toFixed(1)+'%':'&mdash;')+'</td><td class="num">'+sc(p.barrel,'barrel_p')+'</td><td class="num">'+(p.kpct?p.kpct.toFixed(1)+'%':'&mdash;')+'</td><td>'+sched+'</td></tr>';}}).join('');}
 
-function showOAuthStep(step) {
-  ['idle','waiting','exchanging','error'].forEach(s => {
-    document.getElementById('oauth-' + s).classList.toggle('hidden', s !== step);
-  });
-}
+function renderWaiver(){let players=[...ST.freeAgents];const pos=ST.waiverPos;const q=document.getElementById('waiver-search').value.toLowerCase();if(pos!=='ALL')players=players.filter(p=>p.pos.includes(pos));if(q)players=players.filter(p=>p.name.toLowerCase().includes(q));const{col,dir}=ST.waiverSort;players.sort((a,b)=>{const av=a[col]??-999,bv=b[col]??-999;const inv=['xera'].includes(col)?1:-1;return dir*inv*(bv-av);});document.getElementById('waiver-count').textContent=players.length+' players';const tbody=document.getElementById('waiver-body');if(!players.length){tbody.innerHTML='<tr><td colspan="9"><div class="empty"><div class="empty-icon">&#128269;</div><p>No players match your filters</p></div></td></tr>';return;}tbody.innerHTML=players.map(p=>{const pf=PARK[p.team]||100;const pb=pf>=108?'park-hitter':pf<=94?'park-pitcher':'park-neutral';const park='<span class="park-badge '+pb+'">'+pf+'</span>';const pos2='<span style="font-family:var(--mono);font-size:10px;color:var(--blue);background:rgba(59,130,246,.1);border-radius:3px;padding:2px 5px">'+p.pos+'</span>';const mainStat=p.isPitcher?sc(p.xera,'xera'):sc(p.xwoba,'xwoba');return'<tr><td class="name-cell">'+p.name+'</td><td>'+pos2+'</td><td class="team-cell">'+p.team+' '+park+'</td><td class="num">'+(p.pts>0?p.pts.toFixed(1):'&mdash;')+'</td><td class="num">'+mainStat+'</td><td class="num">'+sc(p.barrel,p.isPitcher?'barrel_p':'barrel')+'</td><td class="num">'+sc(p.hardhit,'hardhit')+'</td><td class="num">'+(p.kpct?p.kpct.toFixed(1)+'%':'&mdash;')+'</td><td class="num">'+(p.bbpct?p.bbpct.toFixed(1)+'%':'&mdash;')+'</td></tr>';}).join('');}
 
-async function startAuth() {
-  const pkce = await generatePKCE();
-  STATE.pkceVerifier = pkce.verifier;
-  const params = new URLSearchParams({
-    client_id: STATE.clientId,
-    redirect_uri: 'https://localhost',
-    response_type: 'code',
-    code_challenge: pkce.challenge,
-    code_challenge_method: 'S256',
-  });
-  window.open('https://api.login.yahoo.com/oauth2/request_auth?' + params, '_blank');
-  showOAuthStep('waiting');
-  const codeInput = document.getElementById('code-input');
-  codeInput.addEventListener('input', () => {
-    document.getElementById('exchange-btn').disabled = !codeInput.value.trim();
-  });
-}
+function sc(val,type){if(val===null||val===undefined||isNaN(val))return'<span style="color:var(--muted)">&mdash;</span>';const cls=sclass(val,type);const d=fmtS(val,type);return'<span class="'+cls+'">'+d+'</span>';}
+function fmtS(v,t){if(['xwoba','xwoba_p'].includes(t))return v.toFixed(3);if(t==='xera')return v.toFixed(2);return v.toFixed(1)+'%';}
+function sclass(v,t){if(t==='xwoba') return v>=.380?'val-great':v>=.340?'val-good':v>=.310?'val-avg':v>=.280?'val-poor':'val-bad';if(t==='xwoba_p')return v<=.280?'val-great':v<=.310?'val-good':v<=.340?'val-avg':v<=.370?'val-poor':'val-bad';if(t==='xera')  return v<=3.0?'val-great':v<=3.75?'val-good':v<=4.25?'val-avg':v<=5.0?'val-poor':'val-bad';if(t==='barrel') return v>=12?'val-great':v>=8?'val-good':v>=5?'val-avg':'val-poor';if(t==='barrel_p')return v<=4?'val-great':v<=6?'val-good':v<=8?'val-avg':v<=10?'val-poor':'val-bad';if(t==='hardhit')return v>=44?'val-great':v>=38?'val-good':v>=33?'val-avg':'val-poor';return'val-avg';}
 
-async function exchangeCode() {
-  const code = document.getElementById('code-input').value.trim();
-  if (!code) return;
-  showOAuthStep('exchanging');
-  try {
-    const res = await fetch(PROXY_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        code, code_verifier: STATE.pkceVerifier,
-        client_id: STATE.clientId, client_secret: STATE.clientSecret,
-        redirect_uri: 'https://localhost',
-      }),
-    });
-    if (!res.ok) {
-      const err = await res.json();
-      throw new Error(err.error || 'Request failed (' + res.status + ')');
-    }
-    const data = await res.json();
-    STATE.yahooToken = data.access_token;
-    enterChat(true);
-  } catch(e) {
-    document.getElementById('error-msg').textContent = e.message;
-    showOAuthStep('error');
-  }
-}
+function switchTab(name){document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',['roster','waiver'][i]===name));document.getElementById('tab-roster').classList.toggle('hidden',name!=='roster');document.getElementById('tab-waiver').classList.toggle('hidden',name!=='waiver');if(name==='waiver'&&!ST.freeAgents.length&&ST.token)loadFreeAgents();}
+function setWindow(days,btn){ST.window=days;document.querySelectorAll('.wt-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderRoster();}
+function filterPos(pos,btn){ST.waiverPos=pos;document.querySelectorAll('.pos-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderWaiver();}
+function sortTable(tbl,col){if(ST.rosterSort.col===col)ST.rosterSort.dir*=-1;else{ST.rosterSort.col=col;ST.rosterSort.dir=-1;}renderRoster();}
+function sortWaiver(col){if(ST.waiverSort.col===col)ST.waiverSort.dir*=-1;else{ST.waiverSort.col=col;ST.waiverSort.dir=-1;}renderWaiver();}
+function setStatus(type,text){document.getElementById('status-pill').className='status-pill '+type;document.getElementById('status-text').textContent=text;}
 
-function resetOAuth() {
-  document.getElementById('code-input').value = '';
-  document.getElementById('exchange-btn').disabled = true;
-  showOAuthStep('idle');
-}
-
-function skipOAuth() { enterChat(false); }
-
-function enterChat(withYahoo) {
-  if (withYahoo) {
-    document.getElementById('yahoo-badge').classList.remove('hidden');
-    document.getElementById('roster-btn').classList.add('hidden');
-    addMessage('assistant', '**Welcome to Diamond Edge — Yahoo Fantasy connected.**\n\nYour account is authorized. Ask me anything about your roster — start/sit decisions, waiver pickups, trade analysis, or Statcast deep dives on any player.');
-  } else {
-    addMessage('assistant', '**Welcome to Diamond Edge.**\n\nI\'m your Statcast-aware points league advisor. Use **Set Roster** above to load your team, then ask me anything — *"Best SP pickups this week?"*, *"Who should I sell high on?"*, *"Evaluate this trade..."*');
-  }
-  showScreen('chat');
-  document.getElementById('msg-input').focus();
-}
-
-function toggleRoster() {
-  const panel = document.getElementById('roster-panel');
-  STATE.rosterOpen = !STATE.rosterOpen;
-  panel.classList.toggle('open', STATE.rosterOpen);
-}
-
-function saveRoster() {
-  STATE.manualRoster = document.getElementById('roster-input').value.trim();
-  STATE.rosterSaved = !!STATE.manualRoster;
-  const btn = document.getElementById('roster-btn');
-  if (STATE.rosterSaved) { btn.textContent = '✓ Roster Set'; btn.classList.add('saved'); }
-  else { btn.textContent = '📋 Set Roster'; btn.classList.remove('saved'); }
-  STATE.rosterOpen = false;
-  document.getElementById('roster-panel').classList.remove('open');
-}
-
-function formatText(text) {
-  return text.split('\n').map(line => {
-    line = line
-      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-      .replace(/\*(.*?)\*/g, '<em>$1</em>')
-      .replace(/`(.*?)`/g, '<code>$1</code>');
-    if (/^#+/.test(line)) return '<div class="m-header">' + line.replace(/^#+\s*/,'') + '</div>';
-    if (/^[\-•]/.test(line.trim())) return '<div class="m-bullet"><span class="m-bullet-dot">▸</span><span>' + line.replace(/^[\-•]\s*/,'') + '</span></div>';
-    const numMatch = line.trim().match(/^(\d+)\.\s/);
-    if (numMatch) return '<div class="m-num"><span class="m-num-n">' + numMatch[1] + '.</span><span>' + line.replace(/^\d+\.\s*/,'') + '</span></div>';
-    if (!line.trim()) return '<div class="m-spacer"></div>';
-    return '<div style="margin-top:2px">' + line + '</div>';
-  }).join('');
-}
-
-function addMessage(role, content) {
-  STATE.messages.push({ role, content });
-  const container = document.getElementById('messages');
-  if (role === 'user') document.getElementById('quick-prompts').style.display = 'none';
-  const row = document.createElement('div');
-  row.className = 'msg-row ' + role;
-  if (role === 'assistant') {
-    const avatar = document.createElement('div');
-    avatar.className = 'msg-avatar';
-    avatar.textContent = '⚾';
-    row.appendChild(avatar);
-  }
-  const bubble = document.createElement('div');
-  bubble.className = 'msg-bubble';
-  bubble.innerHTML = role === 'assistant' ? formatText(content) : '';
-  if (role === 'user') bubble.textContent = content;
-  row.appendChild(bubble);
-  container.appendChild(row);
-  scrollBottom();
-}
-
-function showTyping() {
-  const container = document.getElementById('messages');
-  const row = document.createElement('div');
-  row.className = 'msg-row assistant'; row.id = 'typing-row';
-  const avatar = document.createElement('div');
-  avatar.className = 'msg-avatar'; avatar.textContent = '⚾';
-  row.appendChild(avatar);
-  const bubble = document.createElement('div');
-  bubble.className = 'msg-bubble';
-  bubble.innerHTML = '<div class="typing-row"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span></div>';
-  row.appendChild(bubble);
-  container.appendChild(row);
-  scrollBottom();
-}
-
-function hideTyping() { const el = document.getElementById('typing-row'); if (el) el.remove(); }
-function scrollBottom() { const el = document.getElementById('messages'); el.scrollTop = el.scrollHeight; }
-
-function getRosterContext() {
-  return (STATE.rosterSaved && STATE.manualRoster) ? '[My Roster:\n' + STATE.manualRoster + ']\n\n' : '';
-}
-
-async function sendMessage(text) {
-  const input = document.getElementById('msg-input');
-  const userText = text || input.value.trim();
-  if (!userText || STATE.loading) return;
-  input.value = ''; input.style.height = 'auto'; updateSendBtn();
-  addMessage('user', userText);
-  STATE.loading = true; showTyping();
-  const history = STATE.messages.slice(0, -1).map(m => ({ role: m.role, content: m.content }));
-  try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514', max_tokens: 1000,
-        system: SYSTEM_PROMPT,
-        messages: [...history, { role: 'user', content: getRosterContext() + userText }],
-      }),
-    });
-    const data = await res.json();
-    const reply = data.content?.find(b => b.type === 'text')?.text || 'Sorry, no response received.';
-    hideTyping(); addMessage('assistant', reply);
-  } catch(e) {
-    hideTyping(); addMessage('assistant', 'Connection error — please try again.');
-  }
-  STATE.loading = false;
-}
-
-function sendQuick(btn) { sendMessage(btn.textContent); }
-
-function onInputChange(el) {
-  el.style.height = 'auto';
-  el.style.height = Math.min(el.scrollHeight, 130) + 'px';
-  updateSendBtn();
-}
-
-function onInputKey(e) {
-  const isMobile = /Mobi|Android/i.test(navigator.userAgent);
-  if (e.key === 'Enter' && !e.shiftKey && !isMobile) { e.preventDefault(); sendMessage(); }
-}
-
-function updateSendBtn() {
-  const val = document.getElementById('msg-input').value.trim();
-  document.getElementById('send-btn').classList.toggle('ready', !!val && !STATE.loading);
-}
+showScreen('creds');
 </script>
 </body>
 </html>
