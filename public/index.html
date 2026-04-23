@@ -152,7 +152,7 @@
       <div class="topbar-left">
         <div class="topbar-logo">&#9918;</div>
         <span class="topbar-title">DIAMOND EDGE</span>
-        <span class="topbar-season">MLB 2025</span>
+        <span class="topbar-season">MLB 2026</span>
       </div>
       <div class="topbar-right">
         <span class="status-pill loading" id="status-pill"><span class="status-dot"></span><span id="status-text">Loading...</span></span>
@@ -271,7 +271,7 @@
 
 <script>
 const API='https://yahoo-fantasy-proxy.vercel.app';
-const SEASON='2025';
+const SEASON='2026';
 const ST={clientId:'',clientSecret:'',token:null,leagueKey:null,teamKey:null,rosterPlayers:[],freeAgents:[],savantBatters:{},savantPitchers:{},window:7,rosterSort:{col:'pts',dir:-1},waiverSort:{col:'pts',dir:-1},waiverPos:'ALL',pkceVerifier:''};
 const PARK={COL:130,CIN:115,TEX:112,BOS:110,PHI:108,MIL:107,NYY:106,HOU:105,ATL:104,LAD:103,TOR:102,MIN:101,SEA:100,NYM:100,STL:99,DET:98,CLE:97,WSH:97,SDP:96,OAK:96,MIA:95,LAA:95,BAL:94,SFG:93,PIT:93,CHC:92,CHW:91,KCR:90,TBR:89,ARI:88};
 const WEEK_GAMES={COL:7,CIN:7,TEX:6,BOS:6,PHI:6,MIL:6,NYY:7,HOU:6,ATL:6,LAD:6,TOR:6,MIN:5,SEA:5,NYM:5,STL:6,DET:6,CLE:6,WSH:6,SDP:5,OAK:5,MIA:4,LAA:5,BAL:6,SFG:5,PIT:6,CHC:6,CHW:4,KCR:5,TBR:5,ARI:6};
@@ -299,7 +299,7 @@ async function loadAll(){setStatus('loading','Loading data...');try{await Promis
 
 async function yahooFetch(endpoint){const res=await fetch(API+'/api/yahoo?endpoint='+encodeURIComponent(endpoint),{headers:{Authorization:'Bearer '+ST.token}});if(res.status===401){document.getElementById('reconnect-btn').style.display='block';throw new Error('Yahoo token expired');}return res.json();}
 
-async function loadYahooLeague(){const data=await yahooFetch('users;use_login=1/games;game_codes=mlb/leagues?');try{const games=data.fantasy_content.users[0].user[1].games;ST.leagueKey=games[0].game[1].leagues[0].league[0].league_key;}catch(e){throw new Error('Could not parse league: '+e.message);}}
+async function loadYahooLeague(){const data=await yahooFetch('users;use_login=1/games;game_codes=mlb;seasons=2026/leagues?');try{const games=data.fantasy_content.users[0].user[1].games;ST.leagueKey=games[0].game[1].leagues[0].league[0].league_key;}catch(e){throw new Error('Could not parse league: '+e.message);}}
 
 async function loadRoster(){if(!ST.leagueKey)return;const teamData=await yahooFetch('league/'+ST.leagueKey+'/teams?');try{const teams=teamData.fantasy_content.league[1].teams;const count=teams.count;for(let i=0;i<count;i++){const team=teams[i].team[0];const mgrs=team.find(t=>t&&t.managers);if(mgrs){const mgr=mgrs.managers[0].manager;if(mgr.is_current_login){ST.teamKey=team.find(t=>t&&t.team_key).team_key;break;}}}}catch(e){}
 if(!ST.teamKey){try{ST.teamKey=teamData.fantasy_content.league[1].teams[0].team[0].find(t=>t&&t.team_key).team_key;}catch(e){}}
