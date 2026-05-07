@@ -19,9 +19,10 @@
     ::-webkit-scrollbar{width:4px;height:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--dim);border-radius:4px}
     @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
     @keyframes spin{to{transform:rotate(360deg)}}
-    @keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
     @keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
     #app{display:flex;flex-direction:column;min-height:100vh}
+
+    /* ── AUTH ── */
     .auth-screen{flex:1;display:flex;align-items:center;justify-content:center;padding:24px;min-height:100vh;background:var(--bg);background-image:radial-gradient(ellipse at 10% 10%,rgba(245,158,11,.06) 0%,transparent 50%),radial-gradient(ellipse at 90% 90%,rgba(59,130,246,.08) 0%,transparent 50%)}
     .auth-card{width:100%;max-width:400px;background:var(--bg2);border:1px solid var(--border2);border-radius:16px;padding:36px 32px;animation:fadeIn .4s ease}
     .auth-logo{display:flex;flex-direction:column;align-items:center;gap:10px;margin-bottom:28px}
@@ -46,193 +47,275 @@
     .info-red{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);color:#fca5a5}
     .hidden{display:none!important}
     .step{display:flex;flex-direction:column;gap:0}
+
+    /* ── DASHBOARD ── */
     #dashboard{display:none;flex-direction:column;min-height:100vh}
     #dashboard.active{display:flex}
-    #topbar{height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;background:rgba(6,10,18,.95);border-bottom:1px solid var(--border);backdrop-filter:blur(20px);position:sticky;top:0;z-index:100;flex-shrink:0}
-    .topbar-left{display:flex;align-items:center;gap:12px}
-    .topbar-logo{width:30px;height:30px;background:linear-gradient(135deg,var(--accent),#d97706);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;box-shadow:0 0 14px rgba(245,158,11,.3)}
-    .topbar-title{font-family:var(--display);font-size:17px;font-weight:800;letter-spacing:.08em;color:var(--bright)}
-    .topbar-season{font-family:var(--mono);font-size:10px;color:var(--muted);background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:2px 7px}
+
+    /* Topbar */
+    #topbar{height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;background:rgba(6,10,18,.97);border-bottom:1px solid var(--border);backdrop-filter:blur(20px);position:sticky;top:0;z-index:100;flex-shrink:0}
+    .topbar-left{display:flex;align-items:center;gap:10px}
+    .topbar-logo{width:28px;height:28px;background:linear-gradient(135deg,var(--accent),#d97706);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:13px;box-shadow:0 0 12px rgba(245,158,11,.3);flex-shrink:0}
+    .topbar-title{font-family:var(--display);font-size:16px;font-weight:800;letter-spacing:.08em;color:var(--bright)}
+    .topbar-season{font-family:var(--mono);font-size:10px;color:var(--muted);background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:2px 6px}
     .topbar-right{display:flex;align-items:center;gap:8px}
     .status-pill{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:10px;padding:3px 8px;border-radius:20px}
     .status-pill.connected{background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.25);color:#34d399}
     .status-pill.loading{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.25);color:#fbbf24}
+    .status-pill.error{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.25);color:#fca5a5}
     .status-dot{width:6px;height:6px;border-radius:50%;background:currentColor;animation:pulse 2s infinite}
-    #tabs{display:flex;gap:0;border-bottom:1px solid var(--border);background:var(--bg2);padding:0 20px;flex-shrink:0}
-    .tab{padding:12px 18px;font-family:var(--display);font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;background:transparent;border-top:none;border-left:none;border-right:none}
-    .tab:hover{color:var(--bright)}.tab.active{color:var(--accent);border-bottom-color:var(--accent)}
-    .controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:12px 20px;background:var(--bg2);border-bottom:1px solid var(--border);flex-shrink:0}
-    .window-toggle{display:flex;gap:0}
-    .wt-btn{padding:5px 12px;font-family:var(--mono);font-size:11px;font-weight:600;background:var(--surface);border:1px solid var(--border2);color:var(--muted);cursor:pointer;transition:all .15s}
-    .wt-btn:first-child{border-radius:6px 0 0 6px}.wt-btn:last-child{border-radius:0 6px 6px 0}
-    .wt-btn.active{background:rgba(245,158,11,.15);border-color:rgba(245,158,11,.4);color:var(--accent)}
+    #reconnect-btn{font-family:var(--mono);font-size:10px;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.25);color:var(--accent);border-radius:5px;padding:4px 10px;cursor:pointer}
+
+    /* Main tabs */
+    #main-tabs{display:flex;border-bottom:1px solid var(--border);background:var(--bg2);padding:0 16px;flex-shrink:0}
+    .main-tab{padding:11px 16px;font-family:var(--display);font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;background:transparent;border-top:none;border-left:none;border-right:none;white-space:nowrap}
+    .main-tab:hover{color:var(--bright)}.main-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+
+    /* Controls bar */
+    .controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:10px 16px;background:var(--bg2);border-bottom:1px solid var(--border);flex-shrink:0}
+    .seg{display:flex}
+    .seg-btn{padding:4px 10px;font-family:var(--mono);font-size:11px;font-weight:600;background:var(--surface);border:1px solid var(--border2);color:var(--muted);cursor:pointer;transition:all .15s;white-space:nowrap}
+    .seg-btn:first-child{border-radius:5px 0 0 5px}.seg-btn:last-child{border-radius:0 5px 5px 0}
+    .seg-btn:not(:first-child){border-left:none}
+    .seg-btn.active{background:rgba(245,158,11,.15);border-color:rgba(245,158,11,.4);color:var(--accent)}
+
+    /* Stat view sub-tabs */
+    .stat-tabs{display:flex;gap:0;margin-left:auto}
+    .stat-tab{padding:4px 12px;font-family:var(--mono);font-size:11px;font-weight:600;background:var(--surface);border:1px solid var(--border2);color:var(--muted);cursor:pointer;transition:all .15s}
+    .stat-tab:first-child{border-radius:5px 0 0 5px}.stat-tab:last-child{border-radius:0 5px 5px 0}
+    .stat-tab:not(:first-child){border-left:none}
+    .stat-tab.active{background:rgba(59,130,246,.15);border-color:rgba(59,130,246,.4);color:#93c5fd}
+
+    /* Sort select */
+    .sort-select{background:var(--surface);border:1px solid var(--border2);border-radius:5px;padding:4px 8px;color:var(--bright);font-size:11px;font-family:var(--mono);outline:none;cursor:pointer}
+
+    /* Position filters */
     .pos-filter{display:flex;gap:4px;flex-wrap:wrap}
-    .pos-btn{padding:4px 9px;font-family:var(--mono);font-size:10px;font-weight:600;background:var(--surface);border:1px solid var(--border);color:var(--muted);cursor:pointer;border-radius:4px;transition:all .15s}
+    .pos-btn{padding:3px 8px;font-family:var(--mono);font-size:10px;font-weight:600;background:var(--surface);border:1px solid var(--border);color:var(--muted);cursor:pointer;border-radius:4px;transition:all .15s}
     .pos-btn.active{background:rgba(59,130,246,.15);border-color:rgba(59,130,246,.4);color:#93c5fd}
-    .search-box{margin-left:auto;background:var(--surface);border:1px solid var(--border2);border-radius:6px;padding:5px 10px;color:var(--bright);font-size:12px;font-family:var(--font);outline:none;width:160px}
+
+    /* Search */
+    .search-box{background:var(--surface);border:1px solid var(--border2);border-radius:5px;padding:4px 10px;color:var(--bright);font-size:12px;font-family:var(--font);outline:none;width:150px}
     .search-box::placeholder{color:var(--muted)}
-    #content{flex:1;overflow-y:auto;padding:20px}
-    .panel{background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:16px;animation:fadeIn .3s ease}
-    .panel-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--border);background:rgba(255,255,255,.02)}
+
+    /* Today's matchup bar */
+    #matchup-bar{padding:8px 16px;background:rgba(245,158,11,.05);border-bottom:1px solid rgba(245,158,11,.1);font-size:11px;color:var(--muted);display:flex;align-items:center;gap:8px;flex-shrink:0;flex-wrap:wrap}
+    .matchup-date{font-family:var(--mono);color:var(--accent);font-weight:600}
+    .matchup-game{font-family:var(--mono);font-size:10px;background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:2px 7px;color:var(--text)}
+
+    /* Content */
+    #content{flex:1;overflow-y:auto;padding:14px 16px}
+
+    /* Panel */
+    .panel{background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:14px;animation:fadeIn .3s ease}
+    .panel-header{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--border);background:rgba(255,255,255,.02)}
     .panel-title{font-family:var(--display);font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--bright)}
-    .panel-count{font-family:var(--mono);font-size:10px;color:var(--muted);background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:2px 7px}
-    .tbl-wrap{overflow-x:auto}
-    table{width:100%;border-collapse:collapse}
-    thead th{padding:8px 10px;font-family:var(--mono);font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;text-align:left;white-space:nowrap;border-bottom:1px solid var(--border);cursor:pointer;user-select:none;background:rgba(255,255,255,.02);transition:color .15s}
-    thead th:hover{color:var(--bright)}thead th.sorted{color:var(--accent)}
-    tbody tr{border-bottom:1px solid rgba(255,255,255,.03);transition:background .1s}
-    tbody tr:hover{background:rgba(255,255,255,.03)}tbody tr:last-child{border-bottom:none}
-    td{padding:9px 10px;font-size:13px;color:var(--text);white-space:nowrap}
-    td.name-cell{color:var(--bright);font-weight:600}td.team-cell{font-family:var(--mono);font-size:11px;color:var(--muted)}
-    td.num{font-family:var(--mono);font-size:12px;text-align:right}
-    td.good{color:var(--green)}td.bad{color:var(--accent2)}td.warn{color:var(--accent)}
-    .val-great{color:#10b981;font-weight:600}.val-good{color:#34d399}.val-avg{color:var(--text)}.val-poor{color:#f59e0b}.val-bad{color:#ef4444}
-    .park-badge{display:inline-block;padding:1px 6px;border-radius:3px;font-family:var(--mono);font-size:10px;font-weight:600}
-    .park-hitter{background:rgba(16,185,129,.12);color:#34d399;border:1px solid rgba(16,185,129,.2)}
-    .park-neutral{background:rgba(255,255,255,.06);color:var(--muted);border:1px solid var(--border)}
-    .park-pitcher{background:rgba(239,68,68,.1);color:#f87171;border:1px solid rgba(239,68,68,.2)}
-    .empty{text-align:center;padding:48px 24px;color:var(--muted)}
-    .empty .empty-icon{font-size:32px;margin-bottom:12px}
+    .panel-meta{display:flex;align-items:center;gap:8px}
+    .panel-count{font-family:var(--mono);font-size:10px;color:var(--muted);background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:2px 6px}
+
+    /* Table */
+    .tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+    table{width:100%;border-collapse:collapse;min-width:600px}
+    thead th{
+      padding:7px 10px;
+      font-family:var(--mono);font-size:10px;font-weight:600;
+      color:var(--muted);text-transform:uppercase;letter-spacing:.06em;
+      text-align:right;white-space:nowrap;
+      border-bottom:1px solid var(--border);
+      cursor:pointer;user-select:none;
+      background:rgba(255,255,255,.02);
+      transition:color .15s;
+      position:relative;
+    }
+    thead th:first-child,thead th.left{text-align:left}
+    thead th:hover{color:var(--bright)}
+    thead th.sorted{color:var(--accent)}
+    thead th.sorted::after{content:' ↓';opacity:.8}
+    thead th.sorted.asc::after{content:' ↑'}
+
+    tbody tr{border-bottom:1px solid rgba(255,255,255,.025);transition:background .1s}
+    tbody tr:hover{background:rgba(255,255,255,.03)}
+    tbody tr:last-child{border-bottom:none}
+
+    td{padding:8px 10px;font-size:12px;color:var(--text);white-space:nowrap;text-align:right}
+    td:first-child,td.left{text-align:left}
+    td.name-cell{color:var(--bright);font-weight:600;font-size:13px;min-width:130px}
+    td.team-cell{font-family:var(--mono);font-size:10px;color:var(--muted)}
+    td.pos-cell span{font-family:var(--mono);font-size:10px;color:var(--blue);background:rgba(59,130,246,.1);border-radius:3px;padding:1px 5px}
+    td.num{font-family:var(--mono);font-size:12px}
+    td.pts-cell{font-family:var(--mono);font-size:12px;font-weight:700}
+
+    /* Stat coloring */
+    .great{color:#10b981;font-weight:600}.good{color:#34d399}.avg{color:var(--text)}.poor{color:#f59e0b}.bad{color:#ef4444}
+
+    /* Park badge */
+    .park{display:inline-block;padding:1px 5px;border-radius:3px;font-family:var(--mono);font-size:9px;font-weight:600;margin-left:3px}
+    .park-h{background:rgba(16,185,129,.12);color:#34d399;border:1px solid rgba(16,185,129,.2)}
+    .park-n{background:rgba(255,255,255,.05);color:var(--muted);border:1px solid var(--border)}
+    .park-p{background:rgba(239,68,68,.1);color:#f87171;border:1px solid rgba(239,68,68,.2)}
+
+    /* Matchup cell */
+    .opp-cell{font-family:var(--mono);font-size:10px}
+    .opp-pitcher{color:var(--bright);font-weight:600}
+    .opp-hand{display:inline-block;padding:0 4px;border-radius:2px;font-size:9px;margin-left:3px}
+    .opp-L{background:rgba(59,130,246,.15);color:#93c5fd}
+    .opp-R{background:rgba(245,158,11,.15);color:#fbbf24}
+
+    /* Diff cell */
+    .diff-pos{color:#10b981}.diff-neg{color:#ef4444}
+
+    /* Week games */
+    .wk{font-family:var(--mono);font-size:11px}
+
+    /* Empty */
+    .empty{text-align:center;padding:40px 24px;color:var(--muted)}
+    .empty-icon{font-size:28px;margin-bottom:10px}
     .empty p{font-size:13px;line-height:1.6}
-    .spinner{width:18px;height:18px;border:2px solid rgba(245,158,11,.2);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;display:inline-block}
-    #reconnect-btn{font-family:var(--mono);font-size:10px;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.25);color:var(--accent);border-radius:5px;padding:4px 10px;cursor:pointer;transition:background .15s}
-    #reconnect-btn:hover{background:rgba(245,158,11,.2)}
-    @media(max-width:640px){#content{padding:12px}.controls{padding:10px 12px}#tabs{padding:0 12px}.tab{padding:10px 12px;font-size:12px}}
+
+    /* Spinner */
+    .spinner{width:16px;height:16px;border:2px solid rgba(245,158,11,.2);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;display:inline-block;vertical-align:middle}
+
+    @media(max-width:640px){
+      #content{padding:10px}
+      .controls{padding:8px 10px;gap:6px}
+      #main-tabs{padding:0 10px}
+      .main-tab{padding:9px 10px;font-size:11px}
+    }
   </style>
 </head>
 <body>
 <div id="app">
 
+  <!-- ══ CREDS ══ -->
   <div id="screen-creds" class="auth-screen">
     <div class="auth-card">
       <div class="auth-logo">
-        <div class="badge">&#9918;</div>
+        <div class="badge">⚾</div>
         <h1>DIAMOND EDGE</h1>
-        <p>Fantasy Baseball Dashboard</p>
+        <p>Fantasy Baseball Dashboard · 2026</p>
       </div>
       <div class="field"><label>Client ID (Consumer Key)</label><input id="cid" type="text" placeholder="dj0y..." autocomplete="off" spellcheck="false"/></div>
-      <div class="field"><label>Client Secret (Consumer Secret)</label><div class="pw-wrap"><input id="csec" type="password" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" autocomplete="off"/><button class="pw-toggle" onclick="togglePw()">&#128065;</button></div></div>
-      <div class="info-box info-gold" style="font-size:11px;">&#128274; Credentials stay in your browser &mdash; only sent to Yahoo&rsquo;s OAuth servers.</div>
-      <button class="btn btn-gold" id="creds-btn" onclick="saveCreds()" disabled>Connect to Yahoo Fantasy &rarr;</button>
+      <div class="field"><label>Client Secret (Consumer Secret)</label>
+        <div class="pw-wrap"><input id="csec" type="password" placeholder="••••••••••••••••" autocomplete="off"/>
+        <button class="pw-toggle" onclick="togglePw()">👁</button></div>
+      </div>
+      <div class="info-box info-gold" style="font-size:11px;">🔒 Credentials stay in your browser — only sent to Yahoo's OAuth servers.</div>
+      <button class="btn btn-gold" id="creds-btn" onclick="saveCreds()" disabled>Connect to Yahoo Fantasy →</button>
     </div>
   </div>
 
+  <!-- ══ OAUTH ══ -->
   <div id="screen-oauth" class="auth-screen hidden">
     <div class="auth-card">
       <div class="auth-logo">
-        <div class="badge">&#128273;</div>
+        <div class="badge">🔑</div>
         <h1>AUTHORIZE</h1>
         <p>Grant read-only access to your fantasy data</p>
       </div>
       <div id="oauth-idle" class="step">
-        <div class="info-box info-blue"><strong style="color:#e2e8f0">How it works:</strong><br/>1. Click below &mdash; Yahoo opens in a new tab<br/>2. Log in and click <strong style="color:#e2e8f0">Agree</strong><br/>3. You&rsquo;ll land on an error page &mdash; that&rsquo;s expected<br/>4. Copy just the <code style="font-family:monospace;font-size:11px;background:rgba(59,130,246,.2);padding:1px 4px;border-radius:3px;">code=</code> value from the URL and paste below</div>
-        <button class="btn btn-blue" onclick="startAuth()">&#128273; Open Yahoo Authorization</button>
-        <button class="btn btn-ghost" onclick="skipAuth()">Skip &mdash; I&rsquo;ll enter roster manually</button>
+        <div class="info-box info-blue"><strong style="color:#e2e8f0">How it works:</strong><br/>1. Click below — Yahoo opens in a new tab<br/>2. Log in and click <strong style="color:#e2e8f0">Agree</strong><br/>3. You'll land on an error page — that's expected<br/>4. Copy the <code style="font-family:monospace;font-size:11px;background:rgba(59,130,246,.2);padding:1px 4px;border-radius:3px;">code=</code> value from the URL and paste below</div>
+        <button class="btn btn-blue" onclick="startAuth()">🔑 Open Yahoo Authorization</button>
+        <button class="btn btn-ghost" onclick="skipAuth()">Skip — use manual roster</button>
       </div>
       <div id="oauth-waiting" class="step hidden">
-        <div class="info-box info-purple">&#9989; Yahoo tab is open. After authorizing, copy the <code style="font-family:monospace;font-size:11px">code=</code> value from the URL bar and paste below.</div>
-        <div class="field"><label>Authorization Code</label><input id="auth-code" type="text" placeholder="Paste full URL or just the code value" autocomplete="off" spellcheck="false"/></div>
-        <button class="btn btn-gold" id="exchange-btn" onclick="exchangeCode()" disabled>Connect &rarr;</button>
-        <button class="btn btn-ghost" onclick="resetOAuth()">&larr; Go back</button>
+        <div class="info-box info-purple">✅ Yahoo tab is open. Paste the full redirect URL or just the code= value below.</div>
+        <div class="field"><label>Authorization Code</label><input id="auth-code" type="text" placeholder="Paste URL or code value" autocomplete="off" spellcheck="false"/></div>
+        <button class="btn btn-gold" id="exchange-btn" onclick="exchangeCode()" disabled>Connect →</button>
+        <button class="btn btn-ghost" onclick="resetOAuth()">← Go back</button>
       </div>
-      <div id="oauth-exchanging" class="step hidden" style="text-align:center;padding:24px 0;">
+      <div id="oauth-exchanging" class="step hidden" style="text-align:center;padding:24px 0">
         <div class="spinner"></div>
-        <div style="color:#fbbf24;margin-top:14px;font-size:13px;">Connecting to Yahoo...</div>
+        <div style="color:#fbbf24;margin-top:14px;font-size:13px">Connecting to Yahoo...</div>
       </div>
       <div id="oauth-error" class="step hidden">
-        <div class="info-box info-red"><strong>Token exchange failed.</strong><br/><pre id="oauth-err-msg" style="margin-top:8px;font-size:11px;white-space:pre-wrap;word-break:break-all;background:rgba(0,0,0,.3);padding:8px;border-radius:4px;max-height:120px;overflow-y:auto;"></pre></div>
+        <div class="info-box info-red"><strong>Token exchange failed.</strong><br/><pre id="oauth-err-msg" style="margin-top:8px;font-size:11px;white-space:pre-wrap;word-break:break-all;background:rgba(0,0,0,.3);padding:8px;border-radius:4px;max-height:100px;overflow-y:auto"></pre></div>
         <button class="btn btn-gold" onclick="resetOAuth()">Try Again</button>
-        <button class="btn btn-ghost" onclick="skipAuth()">Skip &mdash; enter roster manually</button>
+        <button class="btn btn-ghost" onclick="skipAuth()">Skip</button>
       </div>
     </div>
   </div>
 
+  <!-- ══ DASHBOARD ══ -->
   <div id="dashboard">
+
     <div id="topbar">
       <div class="topbar-left">
-        <div class="topbar-logo">&#9918;</div>
+        <div class="topbar-logo">⚾</div>
         <span class="topbar-title">DIAMOND EDGE</span>
         <span class="topbar-season">MLB 2026</span>
       </div>
       <div class="topbar-right">
         <span class="status-pill loading" id="status-pill"><span class="status-dot"></span><span id="status-text">Loading...</span></span>
-        <button id="reconnect-btn" onclick="reconnect()" style="display:none">&#8635; Reconnect</button>
+        <button id="reconnect-btn" onclick="reconnect()" style="display:none">↺ Reconnect</button>
       </div>
     </div>
 
-    <div id="tabs">
-      <button class="tab active" onclick="switchTab('roster')">My Roster</button>
-      <button class="tab" onclick="switchTab('waiver')">Waiver Wire</button>
+    <!-- Main nav tabs -->
+    <div id="main-tabs">
+      <button class="main-tab active" onclick="switchMain('roster')">My Roster</button>
+      <button class="main-tab" onclick="switchMain('waiver')">Waiver Wire</button>
     </div>
 
+    <!-- ── ROSTER TAB ── -->
     <div id="tab-roster">
       <div class="controls">
-        <div class="window-toggle">
-          <button class="wt-btn active" onclick="setWindow(7,this)">7D</button>
-          <button class="wt-btn" onclick="setWindow(14,this)">14D</button>
-          <button class="wt-btn" onclick="setWindow(30,this)">30D</button>
+        <!-- Time window -->
+        <div class="seg" id="window-seg">
+          <button class="seg-btn active" onclick="setWindow('season',this)">2026</button>
+          <button class="seg-btn" onclick="setWindow(30,this)">30D</button>
+          <button class="seg-btn" onclick="setWindow(14,this)">14D</button>
+          <button class="seg-btn" onclick="setWindow(7,this)">7D</button>
         </div>
-        <span style="font-size:11px;color:var(--muted);margin-left:4px;">Recent window</span>
-        <div style="margin-left:auto;display:flex;gap:8px;align-items:center;">
-          <span style="font-family:var(--mono);font-size:10px;color:var(--muted);">SORT BY</span>
-          <select id="roster-sort" onchange="renderRoster()" style="background:var(--surface);border:1px solid var(--border2);border-radius:6px;padding:4px 8px;color:var(--bright);font-size:11px;font-family:var(--mono);outline:none;">
-            <option value="pts">Fantasy Pts</option>
-            <option value="xwoba">xwOBA</option>
-            <option value="barrel">Barrel%</option>
-            <option value="hardhit">Hard Hit%</option>
-            <option value="xera">xERA</option>
-            <option value="csw">CSW%</option>
-            <option value="whiff">Whiff%</option>
-          </select>
+        <!-- Sort -->
+        <select class="sort-select" id="roster-sort" onchange="renderRoster()">
+          <option value="pts">Sort: Fant Pts</option>
+          <option value="avg">Sort: AVG</option>
+          <option value="ops">Sort: OPS</option>
+          <option value="hr">Sort: HR</option>
+          <option value="rbi">Sort: RBI</option>
+          <option value="xwoba">Sort: xwOBA</option>
+          <option value="barrel">Sort: Barrel%</option>
+          <option value="xera">Sort: xERA</option>
+          <option value="csw">Sort: CSW%</option>
+        </select>
+        <!-- Stat view -->
+        <div class="stat-tabs" id="stat-view-btns">
+          <button class="stat-tab active" onclick="setStatView('trad',this)">Traditional</button>
+          <button class="stat-tab" onclick="setStatView('adv',this)">Advanced</button>
+          <button class="stat-tab" onclick="setStatView('splits',this)">Splits</button>
         </div>
       </div>
-      <div id="content" style="padding:16px 20px;">
-        <div class="panel" id="batters-panel">
-          <div class="panel-header"><span class="panel-title">&#9876; Batters</span><span class="panel-count" id="batter-count">&mdash;</span></div>
-          <div class="tbl-wrap">
-            <table><thead><tr>
-              <th onclick="sortTable('batters','name')">Player <span class="sort-arrow">&updownarrow;</span></th>
-              <th onclick="sortTable('batters','pos')">Pos</th>
-              <th onclick="sortTable('batters','team')">Team</th>
-              <th onclick="sortTable('batters','pts')" class="sorted">Pts <span class="sort-arrow">&darr;</span></th>
-              <th onclick="sortTable('batters','xwoba')">xwOBA</th>
-              <th onclick="sortTable('batters','barrel')">Barrel%</th>
-              <th onclick="sortTable('batters','hardhit')">HardHit%</th>
-              <th onclick="sortTable('batters','ev')">AvgEV</th>
-              <th onclick="sortTable('batters','kpct')">K%</th>
-              <th onclick="sortTable('batters','bbpct')">BB%</th>
-              <th>Wk Games</th>
-            </tr></thead>
-            <tbody id="batters-body"><tr><td colspan="11"><div class="empty"><div class="empty-icon">&#9203;</div><p>Loading roster...</p></div></td></tr></tbody>
-            </table>
+
+      <!-- Today's matchup bar -->
+      <div id="matchup-bar">
+        <span class="matchup-date" id="matchup-date">Loading schedule...</span>
+        <span id="matchup-games"></span>
+      </div>
+
+      <div id="content">
+        <!-- Batters -->
+        <div class="panel">
+          <div class="panel-header">
+            <span class="panel-title">⚔️ Batters</span>
+            <div class="panel-meta"><span class="panel-count" id="batter-count">—</span></div>
           </div>
+          <div class="tbl-wrap"><table><thead id="batter-head"></thead><tbody id="batters-body"></tbody></table></div>
         </div>
-        <div class="panel" id="pitchers-panel">
-          <div class="panel-header"><span class="panel-title">&#9889; Pitchers</span><span class="panel-count" id="pitcher-count">&mdash;</span></div>
-          <div class="tbl-wrap">
-            <table><thead><tr>
-              <th onclick="sortTable('pitchers','name')">Player</th>
-              <th onclick="sortTable('pitchers','pos')">Pos</th>
-              <th onclick="sortTable('pitchers','team')">Team</th>
-              <th onclick="sortTable('pitchers','pts')" class="sorted">Pts <span class="sort-arrow">&darr;</span></th>
-              <th onclick="sortTable('pitchers','xera')">xERA</th>
-              <th onclick="sortTable('pitchers','xwoba')">xwOBA-against</th>
-              <th onclick="sortTable('pitchers','csw')">CSW%</th>
-              <th onclick="sortTable('pitchers','whiff')">Whiff%</th>
-              <th onclick="sortTable('pitchers','barrel')">Barrel%-against</th>
-              <th onclick="sortTable('pitchers','kpct')">K%</th>
-              <th>Wk Games</th>
-            </tr></thead>
-            <tbody id="pitchers-body"><tr><td colspan="11"><div class="empty"><div class="empty-icon">&#9203;</div><p>Loading roster...</p></div></td></tr></tbody>
-            </table>
+        <!-- Pitchers -->
+        <div class="panel">
+          <div class="panel-header">
+            <span class="panel-title">⚡ Pitchers</span>
+            <div class="panel-meta"><span class="panel-count" id="pitcher-count">—</span></div>
           </div>
+          <div class="tbl-wrap"><table><thead id="pitcher-head"></thead><tbody id="pitchers-body"></tbody></table></div>
         </div>
       </div>
     </div>
 
+    <!-- ── WAIVER TAB ── -->
     <div id="tab-waiver" class="hidden">
       <div class="controls">
-        <div class="pos-filter" id="pos-filter">
+        <div class="pos-filter">
           <button class="pos-btn active" onclick="filterPos('ALL',this)">ALL</button>
           <button class="pos-btn" onclick="filterPos('SP',this)">SP</button>
           <button class="pos-btn" onclick="filterPos('RP',this)">RP</button>
@@ -243,95 +326,744 @@
           <button class="pos-btn" onclick="filterPos('SS',this)">SS</button>
           <button class="pos-btn" onclick="filterPos('OF',this)">OF</button>
         </div>
+        <div class="stat-tabs" style="margin-left:auto">
+          <button class="stat-tab active" onclick="setWaiverView('trad',this)">Traditional</button>
+          <button class="stat-tab" onclick="setWaiverView('adv',this)">Advanced</button>
+        </div>
         <input class="search-box" id="waiver-search" placeholder="Search players..." oninput="renderWaiver()"/>
       </div>
-      <div style="padding:16px 20px;">
+      <div style="padding:14px 16px">
         <div class="panel">
-          <div class="panel-header"><span class="panel-title">&#128260; Available Players</span><span class="panel-count" id="waiver-count">&mdash;</span></div>
-          <div class="tbl-wrap">
-            <table><thead><tr>
-              <th onclick="sortWaiver('name')">Player</th>
-              <th onclick="sortWaiver('pos')">Pos</th>
-              <th onclick="sortWaiver('team')">Team</th>
-              <th onclick="sortWaiver('pts')" class="sorted">Pts(Season) <span class="sort-arrow">&darr;</span></th>
-              <th onclick="sortWaiver('xwoba')">xwOBA / xERA</th>
-              <th onclick="sortWaiver('barrel')">Barrel%</th>
-              <th onclick="sortWaiver('hardhit')">HardHit%</th>
-              <th onclick="sortWaiver('kpct')">K%</th>
-              <th onclick="sortWaiver('bbpct')">BB%</th>
-            </tr></thead>
-            <tbody id="waiver-body"><tr><td colspan="9"><div class="empty"><div class="empty-icon">&#9203;</div><p>Loading free agents...</p></div></td></tr></tbody>
-            </table>
+          <div class="panel-header">
+            <span class="panel-title">🔄 Available Players</span>
+            <span class="panel-count" id="waiver-count">—</span>
           </div>
+          <div class="tbl-wrap"><table><thead id="waiver-head"></thead><tbody id="waiver-body"></tbody></table></div>
         </div>
       </div>
     </div>
-  </div>
-</div>
+
+  </div><!-- /dashboard -->
+</div><!-- /app -->
 
 <script>
-const API='https://yahoo-fantasy-proxy.vercel.app';
-const SEASON='2026';
-const ST={clientId:'',clientSecret:'',token:null,leagueKey:null,teamKey:null,rosterPlayers:[],freeAgents:[],savantBatters:{},savantPitchers:{},window:7,rosterSort:{col:'pts',dir:-1},waiverSort:{col:'pts',dir:-1},waiverPos:'ALL',pkceVerifier:''};
-const PARK={COL:130,CIN:115,TEX:112,BOS:110,PHI:108,MIL:107,NYY:106,HOU:105,ATL:104,LAD:103,TOR:102,MIN:101,SEA:100,NYM:100,STL:99,DET:98,CLE:97,WSH:97,SDP:96,OAK:96,MIA:95,LAA:95,BAL:94,SFG:93,PIT:93,CHC:92,CHW:91,KCR:90,TBR:89,ARI:88};
-const WEEK_GAMES={COL:7,CIN:7,TEX:6,BOS:6,PHI:6,MIL:6,NYY:7,HOU:6,ATL:6,LAD:6,TOR:6,MIN:5,SEA:5,NYM:5,STL:6,DET:6,CLE:6,WSH:6,SDP:5,OAK:5,MIA:4,LAA:5,BAL:6,SFG:5,PIT:6,CHC:6,CHW:4,KCR:5,TBR:5,ARI:6};
+// ═══════════════════════════════════
+// CONSTANTS
+// ═══════════════════════════════════
+const API = 'https://yahoo-fantasy-proxy.vercel.app';
+const SEASON = '2026';
 
-document.getElementById('cid').addEventListener('input',checkCreds);
-document.getElementById('csec').addEventListener('input',checkCreds);
+const PARK = {COL:130,CIN:115,TEX:112,BOS:110,PHI:108,MIL:107,NYY:106,HOU:105,ATL:104,LAD:103,TOR:102,MIN:101,SEA:100,NYM:100,STL:99,DET:98,CLE:97,WSH:97,SDP:96,OAK:96,MIA:95,LAA:95,BAL:94,SFG:93,PIT:93,CHC:92,CHW:91,KCR:90,TBR:89,ARI:88};
+const WEEK_GAMES = {COL:7,CIN:7,TEX:6,BOS:6,PHI:6,MIL:6,NYY:7,HOU:6,ATL:6,LAD:6,TOR:6,MIN:5,SEA:5,NYM:5,STL:6,DET:6,CLE:6,WSH:6,SDP:5,OAK:5,MIA:4,LAA:5,BAL:6,SFG:5,PIT:6,CHC:6,CHW:4,KCR:5,TBR:5,ARI:6};
+
+// MLB team abbr → Yahoo abbr map (MLB uses different abbrs sometimes)
+const MLB_TO_YAHOO = {NYY:'NYY',BOS:'BOS',TBR:'TB',TOR:'TOR',BAL:'BAL',CLE:'CLE',DET:'DET',CHW:'CWS',KCR:'KC',MIN:'MIN',HOU:'HOU',LAA:'LAA',OAK:'OAK',SEA:'SEA',TEX:'TEX',ATL:'ATL',MIA:'MIA',NYM:'NYM',PHI:'PHI',WSH:'WAS',CHC:'CHC',CIN:'CIN',MIL:'MIL',PIT:'PIT',STL:'STL',ARI:'ARI',COL:'COL',LAD:'LAD',SDP:'SD',SFG:'SF'};
+
+// ═══════════════════════════════════
+// STATE
+// ═══════════════════════════════════
+const ST = {
+  clientId:'', clientSecret:'', token:null,
+  leagueKey:null, teamKey:null,
+  rosterPlayers:[], freeAgents:[],
+  savantBatters:{}, savantPitchers:{},
+  splitsVsL:{}, splitsVsR:{},
+  todayGames:[], // [{awayTeam, homeTeam, awayPitcher, homePitcher}]
+  teamToPitcher:{}, // yahoo team abbr → {name, hand}
+  window:'season',
+  statView:'trad',
+  waiverView:'trad',
+  waiverPos:'ALL',
+  rosterSortCol:'pts', rosterSortDir:-1,
+  waiverSortCol:'pts', waiverSortDir:-1,
+  pkceVerifier:'',
+};
+
+// ═══════════════════════════════════
+// AUTH
+// ═══════════════════════════════════
+document.getElementById('cid').addEventListener('input', checkCreds);
+document.getElementById('csec').addEventListener('input', checkCreds);
 function checkCreds(){document.getElementById('creds-btn').disabled=!document.getElementById('cid').value.trim()||!document.getElementById('csec').value.trim();}
 function togglePw(){const i=document.getElementById('csec');i.type=i.type==='password'?'text':'password';}
-function saveCreds(){ST.clientId=document.getElementById('cid').value.trim();ST.clientSecret=document.getElementById('csec').value.trim();const saved=sessionStorage.getItem('de_token');if(saved){ST.token=saved;enterDashboard();return;}showScreen('oauth');}
-
+function saveCreds(){
+  ST.clientId=document.getElementById('cid').value.trim();
+  ST.clientSecret=document.getElementById('csec').value.trim();
+  const saved=sessionStorage.getItem('de_token');
+  if(saved){ST.token=saved;enterDashboard();return;}
+  showScreen('oauth');
+}
 function b64url(buf){return btoa(String.fromCharCode(...new Uint8Array(buf))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=/g,'');}
 async function genPKCE(){const v=b64url(crypto.getRandomValues(new Uint8Array(32)));const d=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(v));return{verifier:v,challenge:b64url(d)};}
-
 function showOAuthStep(s){['idle','waiting','exchanging','error'].forEach(x=>document.getElementById('oauth-'+x).classList.toggle('hidden',x!==s));}
-async function startAuth(){const pkce=await genPKCE();ST.pkceVerifier=pkce.verifier;const p=new URLSearchParams({client_id:ST.clientId,redirect_uri:'https://localhost',response_type:'code',code_challenge:pkce.challenge,code_challenge_method:'S256'});window.open('https://api.login.yahoo.com/oauth2/request_auth?'+p,'_blank');showOAuthStep('waiting');document.getElementById('auth-code').addEventListener('input',e=>{document.getElementById('exchange-btn').disabled=!e.target.value.trim();});}
-async function exchangeCode(){let raw=document.getElementById('auth-code').value.trim();if(raw.includes('code=')){const m=raw.match(/[?&]code=([^&]+)/);if(m)raw=m[1];}showOAuthStep('exchanging');try{const res=await fetch(API+'/api/token',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code:raw,code_verifier:ST.pkceVerifier,client_id:ST.clientId,client_secret:ST.clientSecret,redirect_uri:'https://localhost'})});const data=await res.json();if(!res.ok)throw new Error(JSON.stringify(data,null,2));ST.token=data.access_token;sessionStorage.setItem('de_token',ST.token);enterDashboard();}catch(e){document.getElementById('oauth-err-msg').textContent=e.message;showOAuthStep('error');}}
+async function startAuth(){
+  const pkce=await genPKCE();ST.pkceVerifier=pkce.verifier;
+  const p=new URLSearchParams({client_id:ST.clientId,redirect_uri:'https://localhost',response_type:'code',code_challenge:pkce.challenge,code_challenge_method:'S256'});
+  window.open('https://api.login.yahoo.com/oauth2/request_auth?'+p,'_blank');
+  showOAuthStep('waiting');
+  document.getElementById('auth-code').addEventListener('input',e=>{document.getElementById('exchange-btn').disabled=!e.target.value.trim();});
+}
+async function exchangeCode(){
+  let raw=document.getElementById('auth-code').value.trim();
+  if(raw.includes('code=')){const m=raw.match(/[?&]code=([^&]+)/);if(m)raw=m[1];}
+  showOAuthStep('exchanging');
+  try{
+    const res=await fetch(API+'/api/token',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code:raw,code_verifier:ST.pkceVerifier,client_id:ST.clientId,client_secret:ST.clientSecret,redirect_uri:'https://localhost'})});
+    const data=await res.json();
+    if(!res.ok)throw new Error(JSON.stringify(data,null,2));
+    ST.token=data.access_token;
+    sessionStorage.setItem('de_token',ST.token);
+    enterDashboard();
+  }catch(e){document.getElementById('oauth-err-msg').textContent=e.message;showOAuthStep('error');}
+}
 function resetOAuth(){document.getElementById('auth-code').value='';document.getElementById('exchange-btn').disabled=true;showOAuthStep('idle');}
 function skipAuth(){ST.token=null;enterDashboard();}
 function reconnect(){sessionStorage.removeItem('de_token');showScreen('oauth');}
 
-function showScreen(name){['creds','oauth'].forEach(s=>document.getElementById('screen-'+s).classList.toggle('hidden',s!==name));document.getElementById('dashboard').classList.toggle('active',name==='dashboard');if(name!=='dashboard'){document.getElementById('screen-'+name).classList.remove('hidden');}}
+// ═══════════════════════════════════
+// SCREENS
+// ═══════════════════════════════════
+function showScreen(name){
+  document.getElementById('screen-creds').classList.toggle('hidden',name!=='creds');
+  document.getElementById('screen-oauth').classList.toggle('hidden',name!=='oauth');
+  document.getElementById('dashboard').classList.toggle('active',name==='dashboard');
+  if(name==='creds'||name==='oauth') document.getElementById('screen-'+name).classList.remove('hidden');
+}
 function enterDashboard(){showScreen('dashboard');loadAll();}
 
-async function loadAll(){setStatus('loading','Loading data...');try{await Promise.all([loadSavant('batter'),loadSavant('pitcher')]);if(ST.token){await loadYahooLeague();await Promise.all([loadRoster(),loadFreeAgents()]);}else{showManualNote();}setStatus('connected','Live · '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}));}catch(e){setStatus('loading','Partial load');console.error(e);}}
+// ═══════════════════════════════════
+// LOAD ALL DATA
+// ═══════════════════════════════════
+async function loadAll(){
+  setStatus('loading','Loading...');
+  try{
+    // Fire all independent loads in parallel
+    await Promise.allSettled([
+      loadSavant('batter'),
+      loadSavant('pitcher'),
+      loadSplits('L'),
+      loadSplits('R'),
+      loadSchedule(),
+    ]);
+    if(ST.token){
+      await loadYahooLeague();
+      await Promise.allSettled([loadRoster(), loadFreeAgents()]);
+    } else {
+      showManualNote();
+    }
+    setStatus('connected','Live · '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}));
+  }catch(e){
+    setStatus('error','Load error');
+    console.error(e);
+  }
+}
 
-async function yahooFetch(endpoint){const res=await fetch(API+'/api/yahoo?endpoint='+encodeURIComponent(endpoint),{headers:{Authorization:'Bearer '+ST.token}});if(res.status===401){document.getElementById('reconnect-btn').style.display='block';throw new Error('Yahoo token expired');}return res.json();}
+// ═══════════════════════════════════
+// YAHOO API
+// ═══════════════════════════════════
+async function yahooFetch(endpoint){
+  const res=await fetch(API+'/api/yahoo?endpoint='+encodeURIComponent(endpoint),{headers:{Authorization:'Bearer '+ST.token}});
+  if(res.status===401){document.getElementById('reconnect-btn').style.display='block';throw new Error('Yahoo token expired');}
+  return res.json();
+}
 
-async function loadYahooLeague(){const data=await yahooFetch('users;use_login=1/games;game_codes=mlb;seasons=2026/leagues?');try{const games=data.fantasy_content.users[0].user[1].games;ST.leagueKey=games[0].game[1].leagues[0].league[0].league_key;}catch(e){throw new Error('Could not parse league: '+e.message);}}
+async function loadYahooLeague(){
+  const data=await yahooFetch('users;use_login=1/games;game_codes=mlb;seasons='+SEASON+'/leagues?');
+  try{
+    const games=data.fantasy_content.users[0].user[1].games;
+    ST.leagueKey=games[0].game[1].leagues[0].league[0].league_key;
+  }catch(e){throw new Error('Could not parse league: '+e.message);}
+}
 
-async function loadRoster(){if(!ST.leagueKey)return;const teamData=await yahooFetch('league/'+ST.leagueKey+'/teams?');try{const teams=teamData.fantasy_content.league[1].teams;const count=teams.count;for(let i=0;i<count;i++){const team=teams[i].team[0];const mgrs=team.find(t=>t&&t.managers);if(mgrs){const mgr=mgrs.managers[0].manager;if(mgr.is_current_login){ST.teamKey=team.find(t=>t&&t.team_key).team_key;break;}}}}catch(e){}
-if(!ST.teamKey){try{ST.teamKey=teamData.fantasy_content.league[1].teams[0].team[0].find(t=>t&&t.team_key).team_key;}catch(e){}}
-if(!ST.teamKey)return;
-const rd=await yahooFetch('team/'+ST.teamKey+'/roster/players?');try{const players=rd.fantasy_content.team[1].roster[0].players;const count=players.count;ST.rosterPlayers=[];for(let i=0;i<count;i++){const p=players[i].player[0];const s=players[i].player[1];ST.rosterPlayers.push(parsePlayer(p,s));}enrichWithSavant(ST.rosterPlayers);renderRoster();}catch(e){console.error('Roster parse',e);}}
+async function loadRoster(){
+  if(!ST.leagueKey)return;
+  // Get my team
+  const teamData=await yahooFetch('league/'+ST.leagueKey+'/teams?');
+  try{
+    const teams=teamData.fantasy_content.league[1].teams;
+    const count=teams.count;
+    for(let i=0;i<count;i++){
+      const team=teams[i].team[0];
+      const mgrs=team.find(t=>t&&t.managers);
+      if(mgrs){const mgr=mgrs.managers[0].manager;if(mgr.is_current_login){ST.teamKey=team.find(t=>t&&t.team_key).team_key;break;}}
+    }
+    if(!ST.teamKey) ST.teamKey=teamData.fantasy_content.league[1].teams[0].team[0].find(t=>t&&t.team_key).team_key;
+  }catch(e){}
+  if(!ST.teamKey)return;
 
-async function loadFreeAgents(){if(!ST.leagueKey)return;const fd=await yahooFetch('league/'+ST.leagueKey+'/players;status=FA;count=100;sort=AR?');try{const players=fd.fantasy_content.league[1].players;const count=Math.min(players.count,100);ST.freeAgents=[];for(let i=0;i<count;i++){const p=players[i].player[0];const s=players[i].player[1];ST.freeAgents.push(parsePlayer(p,s));}enrichWithSavant(ST.freeAgents);renderWaiver();}catch(e){console.error('FA parse',e);}}
+  // Get roster with stats
+  const rd=await yahooFetch('team/'+ST.teamKey+'/roster/players?');
+  try{
+    const players=rd.fantasy_content.team[1].roster[0].players;
+    ST.rosterPlayers=[];
+    for(let i=0;i<players.count;i++){
+      ST.rosterPlayers.push(parsePlayer(players[i].player[0], players[i].player[1]));
+    }
+    enrichWithSavant(ST.rosterPlayers);
+    enrichWithMatchup(ST.rosterPlayers);
+    renderRoster();
+    document.getElementById('batter-count').textContent=ST.rosterPlayers.filter(p=>!p.isPitcher).length+' players';
+    document.getElementById('pitcher-count').textContent=ST.rosterPlayers.filter(p=>p.isPitcher).length+' players';
+  }catch(e){console.error('Roster parse',e);}
+}
 
-function parsePlayer(pArr,statsObj){const get=key=>{const o=pArr.find(x=>x&&x[key]!==undefined);return o?o[key]:null;};const name=get('full_name')||(get('name')&&get('name').full)||'?';const team=(get('editorial_team_abbr')||'?').toUpperCase();const pos=get('display_position')||(get('eligible_positions')&&get('eligible_positions')[0]&&get('eligible_positions')[0].position)||'?';let pts=0;try{pts=parseFloat(statsObj&&(statsObj.player_points&&statsObj.player_points.total||(statsObj.player_stats&&statsObj.player_stats.stats)))||0;}catch(e){}return{name,team,pos,pts,xwoba:null,barrel:null,hardhit:null,ev:null,kpct:null,bbpct:null,xera:null,csw:null,whiff:null,isPitcher:/SP|RP|\bP\b/.test(pos)};}
+async function loadFreeAgents(){
+  if(!ST.leagueKey)return;
+  // Fetch in batches of 100 up to 500
+  ST.freeAgents=[];
+  for(let start=0;start<500;start+=100){
+    try{
+      const fd=await yahooFetch('league/'+ST.leagueKey+'/players;status=FA;count=100;start='+start+';sort=AR?');
+      const players=fd.fantasy_content.league[1].players;
+      if(!players||players.count===0)break;
+      for(let i=0;i<players.count;i++){
+        ST.freeAgents.push(parsePlayer(players[i].player[0],players[i].player[1]));
+      }
+      if(players.count<100)break;
+    }catch(e){break;}
+  }
+  enrichWithSavant(ST.freeAgents);
+  enrichWithMatchup(ST.freeAgents);
+  renderWaiver();
+  document.getElementById('waiver-count').textContent=ST.freeAgents.length+' players';
+}
 
-async function loadSavant(type){try{const res=await fetch(API+'/api/savant?type='+type+'&season='+SEASON);const rows=await res.json();const map={};if(!Array.isArray(rows))return;rows.forEach(r=>{const a=normName((r.last_name||'')+' '+(r.first_name||''));const b=normName((r.first_name||'')+' '+(r.last_name||''));if(a)map[a]=r;if(b)map[b]=r;});if(type==='batter')ST.savantBatters=map;else ST.savantPitchers=map;}catch(e){console.error('Savant',type,e);}}
+// ═══════════════════════════════════
+// PARSE YAHOO PLAYER
+// ═══════════════════════════════════
+function parsePlayer(pArr, statsObj){
+  const get=key=>{const o=pArr.find(x=>x&&x[key]!==undefined);return o?o[key]:null;};
+  const name=get('full_name')||(get('name')&&get('name').full)||'?';
+  const team=(get('editorial_team_abbr')||'?').toUpperCase();
+  const pos=get('display_position')||(get('eligible_positions')&&get('eligible_positions')[0]&&get('eligible_positions')[0].position)||'?';
+
+  // Extract fantasy points from player_points
+  let pts=0;
+  try{
+    if(statsObj&&statsObj.player_points){
+      pts=parseFloat(statsObj.player_points.total)||0;
+    }
+  }catch(e){}
+
+  // Extract traditional stats from player_stats
+  let avg=null,obp=null,slg=null,ops=null,hr=null,rbi=null,bb=null,k=null,h=null,sb=null;
+  try{
+    if(statsObj&&statsObj.player_stats&&statsObj.player_stats.stats){
+      const stats=statsObj.player_stats.stats;
+      // Yahoo stat IDs: 8=H, 9=2B, 10=3B, 11=HR, 12=R, 13=RBI, 14=SB, 16=BB, 17=K(bat), 18=AVG, 19=OBP, 20=SLG, 21=OPS
+      const sid={};
+      stats.forEach(s=>{if(s&&s.stat)sid[s.stat.stat_id]=parseFloat(s.stat.value)||0;});
+      avg=sid[18]||null; obp=sid[19]||null; slg=sid[20]||null;
+      ops=sid[21]||(avg&&obp&&slg?obp+slg:null);
+      hr=sid[11]||null; rbi=sid[13]||null; bb=sid[16]||null;
+      k=sid[17]||null; h=sid[8]||null; sb=sid[14]||null;
+    }
+  }catch(e){}
+
+  return{name,team,pos,pts,avg,obp,slg,ops,hr,rbi,bb,k,h,sb,
+    xwoba:null,xba:null,xslg:null,barrel:null,hardhit:null,ev:null,kpct:null,bbpct:null,xera:null,csw:null,whiff:null,
+    vsL:null,vsR:null, // split xwoba
+    oppPitcher:null, oppHand:null,
+    isPitcher:/SP|RP|\bP\b/.test(pos)};
+}
+
+// ═══════════════════════════════════
+// SAVANT + SPLITS
+// ═══════════════════════════════════
+async function loadSavant(type){
+  try{
+    const res=await fetch(API+'/api/savant?type='+type+'&season='+SEASON);
+    const rows=await res.json();
+    if(!Array.isArray(rows))return;
+    const map={};
+    rows.forEach(r=>{
+      const a=normName((r.last_name||'')+' '+(r.first_name||''));
+      const b=normName((r.first_name||'')+' '+(r.last_name||''));
+      if(a)map[a]=r; if(b)map[b]=r;
+    });
+    if(type==='batter')ST.savantBatters=map; else ST.savantPitchers=map;
+  }catch(e){console.error('Savant',type,e);}
+}
+
+async function loadSplits(hand){
+  try{
+    const res=await fetch(API+'/api/splits?hand='+hand+'&season='+SEASON);
+    const rows=await res.json();
+    if(!Array.isArray(rows))return;
+    const map={};
+    rows.forEach(r=>{
+      const a=normName((r.last_name||'')+' '+(r.first_name||''));
+      const b=normName((r.first_name||'')+' '+(r.last_name||''));
+      if(a)map[a]=r; if(b)map[b]=r;
+    });
+    if(hand==='L')ST.splitsVsL=map; else ST.splitsVsR=map;
+  }catch(e){console.error('Splits',hand,e);}
+}
+
 function normName(n){return n.toLowerCase().replace(/[^a-z ]/g,'').replace(/\s+/g,' ').trim();}
-function enrichWithSavant(players){players.forEach(p=>{const key=normName(p.name);const src=p.isPitcher?ST.savantPitchers:ST.savantBatters;let row=src[key];if(!row){const last=key.split(' ').pop();const cands=Object.entries(src).filter(([k])=>k.startsWith(last)||k.endsWith(last));if(cands.length===1)row=cands[0][1];}if(row){p.xwoba=parseFloat(row.xwoba)||null;p.barrel=parseFloat(row.barrel_batted_rate)||null;p.hardhit=parseFloat(row.hard_hit_percent)||null;p.ev=parseFloat(row.exit_velocity_avg)||null;p.kpct=parseFloat(row.k_percent)||null;p.bbpct=parseFloat(row.bb_percent)||null;p.xera=parseFloat(row.xera)||null;p.csw=parseFloat(row.csw_rate)||null;p.whiff=parseFloat(row.whiff_percent)||null;}});}
-function showManualNote(){document.getElementById('batters-body').innerHTML='<tr><td colspan="11"><div class="empty"><div class="empty-icon">&#128203;</div><p>No Yahoo connection &mdash; reconnect to see your roster.<br/>Statcast data is loaded and ready.</p></div></td></tr>';document.getElementById('pitchers-body').innerHTML='<tr><td colspan="11"><div class="empty"></div></td></tr>';}
 
-function renderRoster(){const batters=ST.rosterPlayers.filter(p=>!p.isPitcher);const pitchers=ST.rosterPlayers.filter(p=>p.isPitcher);const col=document.getElementById('roster-sort').value;document.getElementById('batter-count').textContent=batters.length+' players';document.getElementById('pitcher-count').textContent=pitchers.length+' players';renderPlayerTable('batters-body',sortPlayers(batters,col),'batter');renderPlayerTable('pitchers-body',sortPlayers(pitchers,col),'pitcher');}
-function sortPlayers(arr,col){return[...arr].sort((a,b)=>{const av=a[col]??-999,bv=b[col]??-999;const inv=['xera'].includes(col)?1:-1;return inv*(bv-av);});}
-function renderPlayerTable(id,players,type){const tbody=document.getElementById(id);if(!players.length){tbody.innerHTML='<tr><td colspan="11"><div class="empty"><div class="empty-icon">&#9918;</div><p>No players</p></div></td></tr>';return;}tbody.innerHTML=players.map(p=>{const pf=PARK[p.team]||100;const pb=pf>=108?'park-hitter':pf<=94?'park-pitcher':'park-neutral';const wg=WEEK_GAMES[p.team]||5;const wgc=wg>=7?'val-great':wg>=6?'val-good':wg<=4?'val-poor':'val-avg';const sched='<span class="'+wgc+'" style="font-family:var(--mono);font-size:11px">'+wg+'G</span> <span style="color:var(--muted);font-size:10px">this wk</span>';const pos='<span style="font-family:var(--mono);font-size:10px;color:var(--blue);background:rgba(59,130,246,.1);border-radius:3px;padding:2px 5px">'+p.pos+'</span>';const park='<span class="park-badge '+pb+'">'+pf+'</span>';if(type==='batter'){return'<tr><td class="name-cell">'+p.name+'</td><td>'+pos+'</td><td class="team-cell">'+p.team+' '+park+'</td><td class="num '+(p.pts>=300?'good':p.pts>0?'':'')+'">'+( p.pts>0?p.pts.toFixed(1):'&mdash;')+'</td><td class="num">'+sc(p.xwoba,'xwoba')+'</td><td class="num">'+sc(p.barrel,'barrel')+'</td><td class="num">'+sc(p.hardhit,'hardhit')+'</td><td class="num">'+(p.ev?p.ev.toFixed(1):'&mdash;')+'</td><td class="num">'+(p.kpct?p.kpct.toFixed(1)+'%':'&mdash;')+'</td><td class="num">'+(p.bbpct?p.bbpct.toFixed(1)+'%':'&mdash;')+'</td><td>'+sched+'</td></tr>';}else{return'<tr><td class="name-cell">'+p.name+'</td><td>'+pos+'</td><td class="team-cell">'+p.team+' '+park+'</td><td class="num '+(p.pts>=300?'good':p.pts>0?'':'')+'">'+( p.pts>0?p.pts.toFixed(1):'&mdash;')+'</td><td class="num">'+sc(p.xera,'xera')+'</td><td class="num">'+sc(p.xwoba,'xwoba_p')+'</td><td class="num">'+(p.csw?p.csw.toFixed(1)+'%':'&mdash;')+'</td><td class="num">'+(p.whiff?p.whiff.toFixed(1)+'%':'&mdash;')+'</td><td class="num">'+sc(p.barrel,'barrel_p')+'</td><td class="num">'+(p.kpct?p.kpct.toFixed(1)+'%':'&mdash;')+'</td><td>'+sched+'</td></tr>';}}).join('');}
+function enrichWithSavant(players){
+  players.forEach(p=>{
+    const key=normName(p.name);
+    const src=p.isPitcher?ST.savantPitchers:ST.savantBatters;
+    let row=src[key];
+    if(!row){
+      const parts=key.split(' ');
+      const last=parts[parts.length-1];
+      const cands=Object.entries(src).filter(([k])=>k.endsWith(' '+last)||k===last);
+      if(cands.length===1)row=cands[0][1];
+    }
+    if(row){
+      p.xwoba=pf(row.xwoba); p.xba=pf(row.xba); p.xslg=pf(row.xslg);
+      p.barrel=pf(row.barrel_batted_rate); p.hardhit=pf(row.hard_hit_percent);
+      p.ev=pf(row.exit_velocity_avg); p.kpct=pf(row.k_percent); p.bbpct=pf(row.bb_percent);
+      p.xera=pf(row.xera); p.csw=pf(row.csw_rate); p.whiff=pf(row.whiff_percent);
+    }
+    // Splits
+    if(!p.isPitcher){
+      const lrow=ST.splitsVsL[key]; const rrow=ST.splitsVsR[key];
+      if(lrow)p.vsL=pf(lrow.xwoba);
+      if(rrow)p.vsR=pf(rrow.xwoba);
+    }
+  });
+}
 
-function renderWaiver(){let players=[...ST.freeAgents];const pos=ST.waiverPos;const q=document.getElementById('waiver-search').value.toLowerCase();if(pos!=='ALL')players=players.filter(p=>p.pos.includes(pos));if(q)players=players.filter(p=>p.name.toLowerCase().includes(q));const{col,dir}=ST.waiverSort;players.sort((a,b)=>{const av=a[col]??-999,bv=b[col]??-999;const inv=['xera'].includes(col)?1:-1;return dir*inv*(bv-av);});document.getElementById('waiver-count').textContent=players.length+' players';const tbody=document.getElementById('waiver-body');if(!players.length){tbody.innerHTML='<tr><td colspan="9"><div class="empty"><div class="empty-icon">&#128269;</div><p>No players match your filters</p></div></td></tr>';return;}tbody.innerHTML=players.map(p=>{const pf=PARK[p.team]||100;const pb=pf>=108?'park-hitter':pf<=94?'park-pitcher':'park-neutral';const park='<span class="park-badge '+pb+'">'+pf+'</span>';const pos2='<span style="font-family:var(--mono);font-size:10px;color:var(--blue);background:rgba(59,130,246,.1);border-radius:3px;padding:2px 5px">'+p.pos+'</span>';const mainStat=p.isPitcher?sc(p.xera,'xera'):sc(p.xwoba,'xwoba');return'<tr><td class="name-cell">'+p.name+'</td><td>'+pos2+'</td><td class="team-cell">'+p.team+' '+park+'</td><td class="num">'+(p.pts>0?p.pts.toFixed(1):'&mdash;')+'</td><td class="num">'+mainStat+'</td><td class="num">'+sc(p.barrel,p.isPitcher?'barrel_p':'barrel')+'</td><td class="num">'+sc(p.hardhit,'hardhit')+'</td><td class="num">'+(p.kpct?p.kpct.toFixed(1)+'%':'&mdash;')+'</td><td class="num">'+(p.bbpct?p.bbpct.toFixed(1)+'%':'&mdash;')+'</td></tr>';}).join('');}
+function pf(v){const n=parseFloat(v);return isNaN(n)?null:n;}
 
-function sc(val,type){if(val===null||val===undefined||isNaN(val))return'<span style="color:var(--muted)">&mdash;</span>';const cls=sclass(val,type);const d=fmtS(val,type);return'<span class="'+cls+'">'+d+'</span>';}
-function fmtS(v,t){if(['xwoba','xwoba_p'].includes(t))return v.toFixed(3);if(t==='xera')return v.toFixed(2);return v.toFixed(1)+'%';}
-function sclass(v,t){if(t==='xwoba') return v>=.380?'val-great':v>=.340?'val-good':v>=.310?'val-avg':v>=.280?'val-poor':'val-bad';if(t==='xwoba_p')return v<=.280?'val-great':v<=.310?'val-good':v<=.340?'val-avg':v<=.370?'val-poor':'val-bad';if(t==='xera')  return v<=3.0?'val-great':v<=3.75?'val-good':v<=4.25?'val-avg':v<=5.0?'val-poor':'val-bad';if(t==='barrel') return v>=12?'val-great':v>=8?'val-good':v>=5?'val-avg':'val-poor';if(t==='barrel_p')return v<=4?'val-great':v<=6?'val-good':v<=8?'val-avg':v<=10?'val-poor':'val-bad';if(t==='hardhit')return v>=44?'val-great':v>=38?'val-good':v>=33?'val-avg':'val-poor';return'val-avg';}
+// ═══════════════════════════════════
+// SCHEDULE / MATCHUPS
+// ═══════════════════════════════════
+async function loadSchedule(){
+  try{
+    const today=new Date().toISOString().split('T')[0];
+    const res=await fetch(API+'/api/schedule?date='+today);
+    const data=await res.json();
+    ST.todayGames=data.games||[];
 
-function switchTab(name){document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',['roster','waiver'][i]===name));document.getElementById('tab-roster').classList.toggle('hidden',name!=='roster');document.getElementById('tab-waiver').classList.toggle('hidden',name!=='waiver');if(name==='waiver'&&!ST.freeAgents.length&&ST.token)loadFreeAgents();}
-function setWindow(days,btn){ST.window=days;document.querySelectorAll('.wt-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderRoster();}
-function filterPos(pos,btn){ST.waiverPos=pos;document.querySelectorAll('.pos-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderWaiver();}
-function sortTable(tbl,col){if(ST.rosterSort.col===col)ST.rosterSort.dir*=-1;else{ST.rosterSort.col=col;ST.rosterSort.dir=-1;}renderRoster();}
-function sortWaiver(col){if(ST.waiverSort.col===col)ST.waiverSort.dir*=-1;else{ST.waiverSort.col=col;ST.waiverSort.dir=-1;}renderWaiver();}
-function setStatus(type,text){document.getElementById('status-pill').className='status-pill '+type;document.getElementById('status-text').textContent=text;}
+    // Build team → pitcher map
+    ST.teamToPitcher={};
+    ST.todayGames.forEach(g=>{
+      if(g.away.probablePitcher){
+        const abbr=MLB_TO_YAHOO[g.away.team]||g.away.team;
+        ST.teamToPitcher[abbr]={name:g.away.probablePitcher.name,hand:g.away.probablePitcher.throws,opp:MLB_TO_YAHOO[g.home.team]||g.home.team};
+      }
+      if(g.home.probablePitcher){
+        const abbr=MLB_TO_YAHOO[g.home.team]||g.home.team;
+        ST.teamToPitcher[abbr]={name:g.home.probablePitcher.name,hand:g.home.probablePitcher.throws,opp:MLB_TO_YAHOO[g.away.team]||g.away.team};
+      }
+    });
 
+    // Render matchup bar
+    const dateEl=document.getElementById('matchup-date');
+    const gamesEl=document.getElementById('matchup-games');
+    dateEl.textContent="Today's Games:";
+    gamesEl.innerHTML=ST.todayGames.map(g=>`<span class="matchup-game">${g.away.team} @ ${g.home.team}</span>`).join('');
+  }catch(e){
+    document.getElementById('matchup-date').textContent='Schedule unavailable';
+    console.error('Schedule',e);
+  }
+}
+
+function enrichWithMatchup(players){
+  players.forEach(p=>{
+    const pitcher=ST.teamToPitcher[p.team];
+    if(pitcher){
+      p.oppPitcher=pitcher.name;
+      p.oppHand=pitcher.hand;
+    }
+  });
+}
+
+// ═══════════════════════════════════
+// RENDER ROSTER
+// ═══════════════════════════════════
+function renderRoster(){
+  const batters=ST.rosterPlayers.filter(p=>!p.isPitcher);
+  const pitchers=ST.rosterPlayers.filter(p=>p.isPitcher);
+  const col=ST.rosterSortCol;
+
+  renderBatterTable('batter-head','batters-body', sortPlayers(batters,col,ST.rosterSortDir));
+  renderPitcherTable('pitcher-head','pitchers-body', sortPlayers(pitchers,col,ST.rosterSortDir));
+}
+
+function sortPlayers(arr,col,dir){
+  return[...arr].sort((a,b)=>{
+    const av=a[col]??-999, bv=b[col]??-999;
+    const inv=['xera','kpct'].includes(col)?-1:1;
+    return dir*inv*(bv-av);
+  });
+}
+
+// ── Batter table ──
+function renderBatterTable(headId, bodyId, players){
+  const head=document.getElementById(headId);
+  const body=document.getElementById(bodyId);
+
+  if(ST.statView==='trad'){
+    head.innerHTML=`<tr>
+      <th class="left" onclick="rsort('name')">Player</th>
+      <th class="left" onclick="rsort('pos')">Pos</th>
+      <th class="left" onclick="rsort('team')">Team</th>
+      <th onclick="rsort('pts')">Pts</th>
+      <th onclick="rsort('avg')">AVG</th>
+      <th onclick="rsort('obp')">OBP</th>
+      <th onclick="rsort('ops')">OPS</th>
+      <th onclick="rsort('hr')">HR</th>
+      <th onclick="rsort('rbi')">RBI</th>
+      <th onclick="rsort('h')">H</th>
+      <th onclick="rsort('bb')">BB</th>
+      <th onclick="rsort('k')">K</th>
+      <th onclick="rsort('sb')">SB</th>
+      <th>Today's Opp</th>
+      <th>Wk G</th>
+    </tr>`;
+    body.innerHTML=players.length?players.map(p=>`<tr>
+      <td class="name-cell left">${p.name}</td>
+      <td class="left"><span style="font-family:var(--mono);font-size:10px;color:var(--blue);background:rgba(59,130,246,.1);border-radius:3px;padding:1px 5px">${p.pos}</span></td>
+      <td class="left team-cell">${p.team}${parkBadge(p.team)}</td>
+      <td class="num pts-cell ${p.pts>=200?'great':p.pts>=100?'good':p.pts>0?'avg':''}">${p.pts>0?p.pts.toFixed(1):'—'}</td>
+      <td class="num">${fmtBA(p.avg)}</td>
+      <td class="num">${fmtBA(p.obp)}</td>
+      <td class="num ${opsClass(p.ops)}">${p.ops?p.ops.toFixed(3):'—'}</td>
+      <td class="num">${p.hr!=null?p.hr:'—'}</td>
+      <td class="num">${p.rbi!=null?p.rbi:'—'}</td>
+      <td class="num">${p.h!=null?p.h:'—'}</td>
+      <td class="num">${p.bb!=null?p.bb:'—'}</td>
+      <td class="num">${p.k!=null?p.k:'—'}</td>
+      <td class="num">${p.sb!=null?p.sb:'—'}</td>
+      <td class="left opp-cell">${oppCell(p)}</td>
+      <td class="num wk">${wkGames(p.team)}</td>
+    </tr>`).join(''):emptyRow(15);
+
+  } else if(ST.statView==='adv'){
+    head.innerHTML=`<tr>
+      <th class="left" onclick="rsort('name')">Player</th>
+      <th class="left" onclick="rsort('pos')">Pos</th>
+      <th class="left" onclick="rsort('team')">Team</th>
+      <th onclick="rsort('pts')">Pts</th>
+      <th onclick="rsort('xwoba')">xwOBA</th>
+      <th onclick="rsort('xba')">xBA</th>
+      <th>BA-xBA</th>
+      <th>SLG-xSLG</th>
+      <th onclick="rsort('barrel')">Barrel%</th>
+      <th onclick="rsort('hardhit')">HardHit%</th>
+      <th onclick="rsort('ev')">AvgEV</th>
+      <th onclick="rsort('kpct')">K%</th>
+      <th onclick="rsort('bbpct')">BB%</th>
+      <th>Today's Opp</th>
+      <th>Wk G</th>
+    </tr>`;
+    body.innerHTML=players.length?players.map(p=>{
+      const baDiff=p.avg!=null&&p.xba!=null?p.avg-p.xba:null;
+      const slgDiff=p.slg!=null&&p.xslg!=null?p.slg-p.xslg:null;
+      return`<tr>
+        <td class="name-cell left">${p.name}</td>
+        <td class="left"><span style="font-family:var(--mono);font-size:10px;color:var(--blue);background:rgba(59,130,246,.1);border-radius:3px;padding:1px 5px">${p.pos}</span></td>
+        <td class="left team-cell">${p.team}${parkBadge(p.team)}</td>
+        <td class="num pts-cell ${p.pts>=200?'great':p.pts>=100?'good':p.pts>0?'avg':''}">${p.pts>0?p.pts.toFixed(1):'—'}</td>
+        <td class="num">${sc(p.xwoba,'xwoba')}</td>
+        <td class="num">${p.xba?p.xba.toFixed(3):'—'}</td>
+        <td class="num">${diffCell(baDiff)}</td>
+        <td class="num">${diffCell(slgDiff)}</td>
+        <td class="num">${sc(p.barrel,'barrel')}</td>
+        <td class="num">${sc(p.hardhit,'hardhit')}</td>
+        <td class="num">${p.ev?p.ev.toFixed(1):'—'}</td>
+        <td class="num">${p.kpct?p.kpct.toFixed(1)+'%':'—'}</td>
+        <td class="num">${p.bbpct?p.bbpct.toFixed(1)+'%':'—'}</td>
+        <td class="left opp-cell">${oppCell(p)}</td>
+        <td class="num wk">${wkGames(p.team)}</td>
+      </tr>`;
+    }).join(''):emptyRow(15);
+
+  } else { // splits
+    head.innerHTML=`<tr>
+      <th class="left" onclick="rsort('name')">Player</th>
+      <th class="left" onclick="rsort('pos')">Pos</th>
+      <th class="left" onclick="rsort('team')">Team</th>
+      <th onclick="rsort('pts')">Pts</th>
+      <th onclick="rsort('xwoba')">xwOBA</th>
+      <th>vs LHP xwOBA</th>
+      <th>vs RHP xwOBA</th>
+      <th>Today's Opp</th>
+      <th>Rel Split</th>
+      <th>Wk G</th>
+    </tr>`;
+    body.innerHTML=players.length?players.map(p=>{
+      const oppSplit=p.oppHand==='L'?p.vsL:p.oppHand==='R'?p.vsR:null;
+      const splitClass=oppSplit!=null?(oppSplit>=.360?'great':oppSplit>=.320?'good':oppSplit>=.290?'avg':'poor'):'';
+      return`<tr>
+        <td class="name-cell left">${p.name}</td>
+        <td class="left"><span style="font-family:var(--mono);font-size:10px;color:var(--blue);background:rgba(59,130,246,.1);border-radius:3px;padding:1px 5px">${p.pos}</span></td>
+        <td class="left team-cell">${p.team}${parkBadge(p.team)}</td>
+        <td class="num pts-cell ${p.pts>=200?'great':p.pts>=100?'good':p.pts>0?'avg':''}">${p.pts>0?p.pts.toFixed(1):'—'}</td>
+        <td class="num">${sc(p.xwoba,'xwoba')}</td>
+        <td class="num">${p.vsL?p.vsL.toFixed(3):'—'}</td>
+        <td class="num">${p.vsR?p.vsR.toFixed(3):'—'}</td>
+        <td class="left opp-cell">${oppCell(p)}</td>
+        <td class="num ${splitClass}">${oppSplit?oppSplit.toFixed(3):'—'}</td>
+        <td class="num wk">${wkGames(p.team)}</td>
+      </tr>`;
+    }).join(''):emptyRow(10);
+  }
+}
+
+// ── Pitcher table ──
+function renderPitcherTable(headId, bodyId, players){
+  const head=document.getElementById(headId);
+  const body=document.getElementById(bodyId);
+
+  if(ST.statView==='trad'||ST.statView==='splits'){
+    head.innerHTML=`<tr>
+      <th class="left" onclick="rsort('name')">Player</th>
+      <th class="left" onclick="rsort('pos')">Pos</th>
+      <th class="left" onclick="rsort('team')">Team</th>
+      <th onclick="rsort('pts')">Pts</th>
+      <th onclick="rsort('xera')">xERA</th>
+      <th onclick="rsort('csw')">CSW%</th>
+      <th onclick="rsort('whiff')">Whiff%</th>
+      <th onclick="rsort('kpct')">K%</th>
+      <th onclick="rsort('barrel')">Barrel% Against</th>
+      <th onclick="rsort('xwoba')">xwOBA Against</th>
+      <th>Wk G</th>
+    </tr>`;
+  } else {
+    head.innerHTML=`<tr>
+      <th class="left" onclick="rsort('name')">Player</th>
+      <th class="left" onclick="rsort('pos')">Pos</th>
+      <th class="left" onclick="rsort('team')">Team</th>
+      <th onclick="rsort('pts')">Pts</th>
+      <th onclick="rsort('xera')">xERA</th>
+      <th onclick="rsort('xwoba')">xwOBA Against</th>
+      <th onclick="rsort('csw')">CSW%</th>
+      <th onclick="rsort('whiff')">Whiff%</th>
+      <th onclick="rsort('barrel')">Barrel%</th>
+      <th onclick="rsort('kpct')">K%</th>
+      <th onclick="rsort('bbpct')">BB%</th>
+      <th onclick="rsort('hardhit')">HardHit%</th>
+      <th>Wk G</th>
+    </tr>`;
+  }
+
+  const cols=ST.statView==='adv'?13:11;
+  body.innerHTML=players.length?players.map(p=>`<tr>
+    <td class="name-cell left">${p.name}</td>
+    <td class="left"><span style="font-family:var(--mono);font-size:10px;color:var(--blue);background:rgba(59,130,246,.1);border-radius:3px;padding:1px 5px">${p.pos}</span></td>
+    <td class="left team-cell">${p.team}${parkBadge(p.team)}</td>
+    <td class="num pts-cell ${p.pts>=200?'great':p.pts>=100?'good':p.pts>0?'avg':''}">${p.pts>0?p.pts.toFixed(1):'—'}</td>
+    <td class="num">${sc(p.xera,'xera')}</td>
+    ${ST.statView==='adv'?`<td class="num">${sc(p.xwoba,'xwoba_p')}</td>`:''}
+    <td class="num">${p.csw?p.csw.toFixed(1)+'%':'—'}</td>
+    <td class="num">${p.whiff?p.whiff.toFixed(1)+'%':'—'}</td>
+    <td class="num">${sc(p.barrel,'barrel_p')}</td>
+    ${ST.statView!=='adv'?`<td class="num">${sc(p.xwoba,'xwoba_p')}</td>`:''}
+    ${ST.statView==='adv'?`<td class="num">${p.kpct?p.kpct.toFixed(1)+'%':'—'}</td><td class="num">${p.bbpct?p.bbpct.toFixed(1)+'%':'—'}</td><td class="num">${sc(p.hardhit,'hardhit_p')}</td>`:''}
+    <td class="num wk">${wkGames(p.team)}</td>
+  </tr>`).join(''):emptyRow(cols);
+}
+
+// ═══════════════════════════════════
+// RENDER WAIVER
+// ═══════════════════════════════════
+function renderWaiver(){
+  let players=[...ST.freeAgents];
+  const pos=ST.waiverPos;
+  const q=(document.getElementById('waiver-search').value||'').toLowerCase();
+  if(pos!=='ALL')players=players.filter(p=>p.pos.includes(pos));
+  if(q)players=players.filter(p=>p.name.toLowerCase().includes(q));
+
+  players.sort((a,b)=>{
+    const av=a[ST.waiverSortCol]??-999, bv=b[ST.waiverSortCol]??-999;
+    const inv=['xera','kpct'].includes(ST.waiverSortCol)?-1:1;
+    return ST.waiverSortDir*inv*(bv-av);
+  });
+
+  document.getElementById('waiver-count').textContent=players.length+' players';
+  const head=document.getElementById('waiver-head');
+  const body=document.getElementById('waiver-body');
+
+  if(ST.waiverView==='trad'){
+    head.innerHTML=`<tr>
+      <th class="left" onclick="wsort('name')">Player</th>
+      <th class="left" onclick="wsort('pos')">Pos</th>
+      <th class="left" onclick="wsort('team')">Team</th>
+      <th onclick="wsort('pts')">Pts</th>
+      <th onclick="wsort('avg')">AVG</th>
+      <th onclick="wsort('obp')">OBP</th>
+      <th onclick="wsort('ops')">OPS</th>
+      <th onclick="wsort('hr')">HR</th>
+      <th onclick="wsort('rbi')">RBI</th>
+      <th onclick="wsort('h')">H</th>
+      <th onclick="wsort('bb')">BB</th>
+      <th onclick="wsort('k')">K</th>
+      <th>Wk G</th>
+    </tr>`;
+    body.innerHTML=players.length?players.map(p=>`<tr>
+      <td class="name-cell left">${p.name}</td>
+      <td class="left"><span style="font-family:var(--mono);font-size:10px;color:var(--blue);background:rgba(59,130,246,.1);border-radius:3px;padding:1px 5px">${p.pos}</span></td>
+      <td class="left team-cell">${p.team}${parkBadge(p.team)}</td>
+      <td class="num pts-cell ${p.pts>=200?'great':p.pts>=100?'good':p.pts>0?'avg':''}">${p.pts>0?p.pts.toFixed(1):'—'}</td>
+      <td class="num">${fmtBA(p.avg)}</td>
+      <td class="num">${fmtBA(p.obp)}</td>
+      <td class="num ${opsClass(p.ops)}">${p.ops?p.ops.toFixed(3):'—'}</td>
+      <td class="num">${p.hr!=null?p.hr:'—'}</td>
+      <td class="num">${p.rbi!=null?p.rbi:'—'}</td>
+      <td class="num">${p.h!=null?p.h:'—'}</td>
+      <td class="num">${p.bb!=null?p.bb:'—'}</td>
+      <td class="num">${p.k!=null?p.k:'—'}</td>
+      <td class="num wk">${wkGames(p.team)}</td>
+    </tr>`).join(''):emptyRow(13);
+  } else {
+    head.innerHTML=`<tr>
+      <th class="left" onclick="wsort('name')">Player</th>
+      <th class="left" onclick="wsort('pos')">Pos</th>
+      <th class="left" onclick="wsort('team')">Team</th>
+      <th onclick="wsort('pts')">Pts</th>
+      <th onclick="wsort('xwoba')">xwOBA/xERA</th>
+      <th onclick="wsort('barrel')">Barrel%</th>
+      <th onclick="wsort('hardhit')">HardHit%</th>
+      <th onclick="wsort('csw')">CSW%</th>
+      <th onclick="wsort('whiff')">Whiff%</th>
+      <th onclick="wsort('kpct')">K%</th>
+      <th onclick="wsort('bbpct')">BB%</th>
+      <th>Wk G</th>
+    </tr>`;
+    body.innerHTML=players.length?players.map(p=>`<tr>
+      <td class="name-cell left">${p.name}</td>
+      <td class="left"><span style="font-family:var(--mono);font-size:10px;color:var(--blue);background:rgba(59,130,246,.1);border-radius:3px;padding:1px 5px">${p.pos}</span></td>
+      <td class="left team-cell">${p.team}${parkBadge(p.team)}</td>
+      <td class="num pts-cell ${p.pts>=200?'great':p.pts>=100?'good':p.pts>0?'avg':''}">${p.pts>0?p.pts.toFixed(1):'—'}</td>
+      <td class="num">${p.isPitcher?sc(p.xera,'xera'):sc(p.xwoba,'xwoba')}</td>
+      <td class="num">${sc(p.barrel,p.isPitcher?'barrel_p':'barrel')}</td>
+      <td class="num">${sc(p.hardhit,'hardhit')}</td>
+      <td class="num">${p.csw?p.csw.toFixed(1)+'%':'—'}</td>
+      <td class="num">${p.whiff?p.whiff.toFixed(1)+'%':'—'}</td>
+      <td class="num">${p.kpct?p.kpct.toFixed(1)+'%':'—'}</td>
+      <td class="num">${p.bbpct?p.bbpct.toFixed(1)+'%':'—'}</td>
+      <td class="num wk">${wkGames(p.team)}</td>
+    </tr>`).join(''):emptyRow(12);
+  }
+}
+
+// ═══════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════
+function parkBadge(team){
+  const pf=PARK[team]||100;
+  const cls=pf>=108?'park-h':pf<=94?'park-p':'park-n';
+  return`<span class="park ${cls}">${pf}</span>`;
+}
+
+function wkGames(team){
+  const g=WEEK_GAMES[team]||5;
+  const cls=g>=7?'great':g>=6?'good':g<=4?'poor':'avg';
+  return`<span class="${cls}">${g}</span>`;
+}
+
+function oppCell(p){
+  if(!p.oppPitcher)return'<span style="color:var(--muted)">—</span>';
+  const handCls=p.oppHand==='L'?'opp-L':'opp-R';
+  return`<span class="opp-pitcher">${p.oppPitcher}</span><span class="opp-hand ${handCls}">${p.oppHand||'?'}</span>`;
+}
+
+function diffCell(diff){
+  if(diff==null)return'—';
+  const cls=diff>0.010?'diff-pos':diff<-0.010?'diff-neg':'avg';
+  const sign=diff>0?'+':'';
+  return`<span class="${cls}">${sign}${diff.toFixed(3)}</span>`;
+}
+
+function fmtBA(v){return v!=null?v.toFixed(3):'—';}
+function opsClass(v){if(v==null)return'';return v>=.900?'great':v>=.800?'good':v>=.700?'avg':'poor';}
+
+function sc(val,type){
+  if(val==null||isNaN(val))return'<span style="color:var(--muted)">—</span>';
+  const cls=sclass(val,type);
+  const d=fmtS(val,type);
+  return`<span class="${cls}">${d}</span>`;
+}
+function fmtS(v,t){
+  if(['xwoba','xwoba_p'].includes(t))return v.toFixed(3);
+  if(t==='xera')return v.toFixed(2);
+  return v.toFixed(1)+'%';
+}
+function sclass(v,t){
+  if(t==='xwoba')  return v>=.380?'great':v>=.340?'good':v>=.310?'avg':v>=.280?'poor':'bad';
+  if(t==='xwoba_p')return v<=.280?'great':v<=.310?'good':v<=.340?'avg':v<=.370?'poor':'bad';
+  if(t==='xera')   return v<=3.0?'great':v<=3.75?'good':v<=4.25?'avg':v<=5.0?'poor':'bad';
+  if(t==='barrel') return v>=12?'great':v>=8?'good':v>=5?'avg':'poor';
+  if(t==='barrel_p')return v<=4?'great':v<=6?'good':v<=8?'avg':v<=10?'poor':'bad';
+  if(t==='hardhit')return v>=44?'great':v>=38?'good':v>=33?'avg':'poor';
+  if(t==='hardhit_p')return v<=32?'great':v<=36?'good':v<=40?'avg':'poor';
+  return'avg';
+}
+
+function emptyRow(cols){return`<tr><td colspan="${cols}"><div class="empty"><div class="empty-icon">⚾</div><p>No players found</p></div></td></tr>`;}
+
+function showManualNote(){
+  document.getElementById('batters-body').innerHTML=`<tr><td colspan="15"><div class="empty"><div class="empty-icon">📋</div><p>No Yahoo connection — reconnect to see your roster.</p></div></td></tr>`;
+  document.getElementById('pitchers-body').innerHTML='';
+}
+
+// ═══════════════════════════════════
+// CONTROLS
+// ═══════════════════════════════════
+function switchMain(name){
+  document.querySelectorAll('.main-tab').forEach((t,i)=>t.classList.toggle('active',['roster','waiver'][i]===name));
+  document.getElementById('tab-roster').classList.toggle('hidden',name!=='roster');
+  document.getElementById('tab-waiver').classList.toggle('hidden',name!=='waiver');
+  if(name==='waiver'&&!ST.freeAgents.length&&ST.token)loadFreeAgents();
+}
+
+function setWindow(w,btn){
+  ST.window=w;
+  document.querySelectorAll('#window-seg .seg-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderRoster();
+}
+
+function setStatView(v,btn){
+  ST.statView=v;
+  document.querySelectorAll('#stat-view-btns .stat-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderRoster();
+}
+
+function setWaiverView(v,btn){
+  ST.waiverView=v;
+  document.querySelectorAll('#tab-waiver .stat-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderWaiver();
+}
+
+function filterPos(pos,btn){
+  ST.waiverPos=pos;
+  document.querySelectorAll('.pos-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderWaiver();
+}
+
+function rsort(col){
+  if(ST.rosterSortCol===col)ST.rosterSortDir*=-1;
+  else{ST.rosterSortCol=col;ST.rosterSortDir=-1;}
+  // sync dropdown
+  const sel=document.getElementById('roster-sort');
+  if(sel&&[...sel.options].find(o=>o.value===col))sel.value=col;
+  renderRoster();
+}
+function wsort(col){
+  if(ST.waiverSortCol===col)ST.waiverSortDir*=-1;
+  else{ST.waiverSortCol=col;ST.waiverSortDir=-1;}
+  renderWaiver();
+}
+
+function setStatus(type,text){
+  document.getElementById('status-pill').className='status-pill '+type;
+  document.getElementById('status-text').textContent=text;
+}
+
+// ═══════════════════════════════════
+// INIT
+// ═══════════════════════════════════
 showScreen('creds');
 </script>
 </body>
