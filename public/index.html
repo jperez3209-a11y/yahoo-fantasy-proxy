@@ -6,214 +6,218 @@
   <title>Diamond Edge</title>
   <style>
     :root {
-      --bg:       #07090f;
-      --bg2:      #0e1420;
-      --bg3:      #141d2e;
-      --border:   #1e2d45;
-      --border2:  #243550;
-      --text:     #94a3b8;
-      --bright:   #f1f5f9;
-      --muted:    #3d5068;
-      --accent:   #f59e0b;
-      --blue:     #3b82f6;
-      --green:    #10b981;
-      --red:      #ef4444;
-      --purple:   #8b5cf6;
+      --bg:#07090f; --bg2:#0e1420; --bg3:#141d2e;
+      --border:#1e2d45; --border2:#243550;
+      --text:#94a3b8; --bright:#f1f5f9; --muted:#3d5068;
+      --accent:#f59e0b; --blue:#3b82f6; --green:#10b981;
+      --red:#ef4444; --purple:#8b5cf6;
     }
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { min-height: 100%; background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 14px; -webkit-font-smoothing: antialiased; }
-
-    @keyframes fadeIn  { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
-    @keyframes spin    { to{transform:rotate(360deg)} }
-    @keyframes pulse   { 0%,100%{opacity:.5} 50%{opacity:1} }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;-webkit-font-smoothing:antialiased}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    @keyframes pulse{0%,100%{opacity:.5}50%{opacity:1}}
+    @keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
 
     /* ── AUTH ── */
-    .auth-wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; background: var(--bg); background-image: radial-gradient(ellipse at 30% 20%, rgba(245,158,11,.07) 0%, transparent 50%), radial-gradient(ellipse at 70% 80%, rgba(59,130,246,.06) 0%, transparent 50%); }
-    .auth-box { width: 100%; max-width: 380px; background: var(--bg2); border: 1px solid var(--border2); border-radius: 16px; padding: 28px 24px; animation: fadeIn .35s ease; }
-    .auth-logo { text-align: center; margin-bottom: 24px; }
-    .auth-logo .icon { width: 50px; height: 50px; background: linear-gradient(135deg, #d97706, var(--accent)); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; margin: 0 auto 10px; box-shadow: 0 0 30px rgba(245,158,11,.2); }
-    .auth-logo h1 { font-size: 22px; font-weight: 800; color: var(--bright); letter-spacing: .04em; }
-    .auth-logo p  { font-size: 12px; color: var(--muted); margin-top: 3px; }
-    .field { margin-bottom: 12px; }
-    .field label { display: block; font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .1em; margin-bottom: 5px; }
-    .field input { width: 100%; background: rgba(255,255,255,.04); border: 1px solid var(--border2); border-radius: 8px; padding: 10px 12px; color: var(--bright); font-size: 13px; font-family: 'SF Mono', monospace; outline: none; -webkit-appearance: none; transition: border-color .15s; }
-    .field input:focus { border-color: var(--accent); }
-    .pw-row { position: relative; }
-    .pw-row input { padding-right: 38px; }
-    .pw-toggle { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--muted); cursor: pointer; font-size: 14px; padding: 2px; }
-    .abtn { display: block; width: 100%; padding: 12px; border: none; border-radius: 8px; font-size: 14px; font-weight: 700; font-family: inherit; cursor: pointer; transition: all .15s; -webkit-tap-highlight-color: transparent; margin-top: 8px; }
-    .abtn-gold { background: linear-gradient(135deg, #d97706, var(--accent)); color: #000; }
-    .abtn-blue { background: linear-gradient(135deg, #1d4ed8, var(--blue)); color: #fff; }
-    .abtn-ghost { background: transparent; border: 1px solid var(--border2); color: var(--muted); }
-    .abtn:disabled { opacity: .35; cursor: not-allowed; }
-    .abtn:not(:disabled):active { transform: scale(.98); }
-    .auth-note { font-size: 11px; color: var(--muted); margin-top: 10px; line-height: 1.6; text-align: center; }
-    .auth-info { background: rgba(59,130,246,.07); border: 1px solid rgba(59,130,246,.15); border-radius: 8px; padding: 11px 13px; font-size: 12px; color: #7dd3fc; line-height: 1.7; margin-bottom: 12px; }
-    .auth-err { background: rgba(239,68,68,.07); border: 1px solid rgba(239,68,68,.2); border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #fca5a5; margin-top: 10px; display: none; }
+    .auth-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:var(--bg);background-image:radial-gradient(ellipse at 30% 20%,rgba(245,158,11,.07) 0%,transparent 50%),radial-gradient(ellipse at 70% 80%,rgba(59,130,246,.06) 0%,transparent 50%)}
+    .auth-box{width:100%;max-width:380px;background:var(--bg2);border:1px solid var(--border2);border-radius:16px;padding:28px 24px;animation:fadeIn .35s ease}
+    .auth-logo{text-align:center;margin-bottom:24px}
+    .auth-logo .icon{width:50px;height:50px;background:linear-gradient(135deg,#d97706,var(--accent));border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;margin:0 auto 10px;box-shadow:0 0 30px rgba(245,158,11,.2)}
+    .auth-logo h1{font-size:22px;font-weight:800;color:var(--bright);letter-spacing:.04em}
+    .auth-logo p{font-size:12px;color:var(--muted);margin-top:3px}
+    .field{margin-bottom:12px}
+    .field label{display:block;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:5px}
+    .field input{width:100%;background:rgba(255,255,255,.04);border:1px solid var(--border2);border-radius:8px;padding:10px 12px;color:var(--bright);font-size:13px;font-family:'SF Mono',monospace;outline:none;-webkit-appearance:none;transition:border-color .15s}
+    .field input:focus{border-color:var(--accent)}
+    .pw-row{position:relative}.pw-row input{padding-right:38px}
+    .pw-toggle{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px;padding:2px}
+    .abtn{display:block;width:100%;padding:12px;border:none;border-radius:8px;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;transition:all .15s;-webkit-tap-highlight-color:transparent;margin-top:8px}
+    .abtn-gold{background:linear-gradient(135deg,#d97706,var(--accent));color:#000}
+    .abtn-blue{background:linear-gradient(135deg,#1d4ed8,var(--blue));color:#fff}
+    .abtn-ghost{background:transparent;border:1px solid var(--border2);color:var(--muted)}
+    .abtn:disabled{opacity:.35;cursor:not-allowed}.abtn:not(:disabled):active{transform:scale(.98)}
+    .auth-note{font-size:11px;color:var(--muted);margin-top:10px;line-height:1.6;text-align:center}
+    .auth-info{background:rgba(59,130,246,.07);border:1px solid rgba(59,130,246,.15);border-radius:8px;padding:11px 13px;font-size:12px;color:#7dd3fc;line-height:1.7;margin-bottom:12px}
+    .auth-err{background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.2);border-radius:8px;padding:10px 12px;font-size:12px;color:#fca5a5;margin-top:10px;display:none}
 
     /* ── DASHBOARD ── */
-    #dashboard { display: none; min-height: 100vh; padding-bottom: 32px; }
-    #dashboard.on { display: block; }
+    #dashboard{display:none;min-height:100vh;padding-bottom:40px}
+    #dashboard.on{display:block}
 
     /* Topbar */
-    #topbar { position: sticky; top: 0; z-index: 50; background: rgba(7,9,15,.96); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); padding: 0 14px; height: 50px; display: flex; align-items: center; justify-content: space-between; }
-    .tb-left { display: flex; align-items: center; gap: 8px; }
-    .tb-icon { width: 26px; height: 26px; background: linear-gradient(135deg,#d97706,var(--accent)); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0; }
-    .tb-title { font-size: 15px; font-weight: 800; color: var(--bright); letter-spacing: .04em; }
-    .tb-right { display: flex; align-items: center; gap: 6px; }
-    .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); animation: pulse 2s infinite; flex-shrink: 0; }
-    .status-dot.live { background: var(--green); }
-    .status-dot.err  { background: var(--red); }
-    #status-text { font-size: 10px; color: var(--muted); font-family: monospace; }
-    #reconnect { font-size: 10px; font-family: monospace; background: rgba(245,158,11,.1); border: 1px solid rgba(245,158,11,.2); color: var(--accent); border-radius: 4px; padding: 3px 8px; cursor: pointer; display: none; }
+    #topbar{position:sticky;top:0;z-index:50;background:rgba(7,9,15,.96);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 14px;height:50px;display:flex;align-items:center;justify-content:space-between}
+    .tb-left{display:flex;align-items:center;gap:8px}
+    .tb-icon{width:26px;height:26px;background:linear-gradient(135deg,#d97706,var(--accent));border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+    .tb-title{font-size:15px;font-weight:800;color:var(--bright);letter-spacing:.04em}
+    .tb-right{display:flex;align-items:center;gap:6px}
+    .sdot{width:6px;height:6px;border-radius:50%;background:var(--muted);flex-shrink:0;animation:pulse 2s infinite}
+    .sdot.live{background:var(--green)}.sdot.err{background:var(--red)}
+    #status-text{font-size:10px;color:var(--muted);font-family:monospace}
+    #reconnect-btn{font-size:10px;font-family:monospace;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.2);color:var(--accent);border-radius:4px;padding:3px 8px;cursor:pointer;display:none}
+
+    /* Loading overlay */
+    #load-overlay{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:200;gap:14px}
+    #load-overlay.gone{display:none}
+    .load-spinner{width:32px;height:32px;border:3px solid rgba(245,158,11,.15);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
+    .load-msg{font-size:13px;color:var(--muted);font-family:monospace}
+    .load-sub{font-size:11px;color:var(--muted);opacity:.6}
 
     /* Schedule strip */
-    #sched-strip { padding: 10px 14px; background: var(--bg2); border-bottom: 1px solid var(--border); overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; }
-    #sched-strip::-webkit-scrollbar { display: none; }
-    .sched-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--accent); margin-right: 8px; font-family: monospace; }
-    .game-pill { display: inline-flex; align-items: center; gap: 4px; background: var(--bg3); border: 1px solid var(--border); border-radius: 5px; padding: 3px 8px; margin-right: 5px; font-size: 11px; font-family: monospace; color: var(--text); }
-    .game-pill .sp { color: var(--bright); font-weight: 600; }
-    .game-pill .hand { font-size: 9px; padding: 0 3px; border-radius: 2px; font-weight: 700; }
-    .hand-L { background: rgba(59,130,246,.2); color: #93c5fd; }
-    .hand-R { background: rgba(245,158,11,.2); color: #fbbf24; }
+    #sched-strip{padding:9px 14px;background:var(--bg2);border-bottom:1px solid var(--border);overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch}
+    #sched-strip::-webkit-scrollbar{display:none}
+    .sched-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin-right:8px;font-family:monospace}
+    .gpill{display:inline-flex;align-items:center;gap:4px;background:var(--bg3);border:1px solid var(--border);border-radius:5px;padding:3px 8px;margin-right:5px;font-size:11px;font-family:monospace;color:var(--text)}
+    .gpill .sp{color:var(--bright);font-weight:600}
+    .gpill .hbadge{font-size:9px;padding:0 3px;border-radius:2px;font-weight:700}
+    .hand-L{background:rgba(59,130,246,.2);color:#93c5fd}
+    .hand-R{background:rgba(245,158,11,.2);color:#fbbf24}
 
-    /* Section header */
-    .section-hdr { padding: 14px 14px 8px; display: flex; align-items: center; gap: 8px; }
-    .section-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; }
-    .section-label.batters  { color: var(--blue); }
-    .section-label.pitchers { color: var(--purple); }
-    .section-count { font-size: 10px; font-family: monospace; color: var(--muted); background: var(--bg3); border: 1px solid var(--border); border-radius: 4px; padding: 1px 6px; }
+    /* Section */
+    .shdr{padding:14px 14px 8px;display:flex;align-items:center;gap:8px}
+    .slbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em}
+    .slbl.bat{color:var(--blue)}.slbl.pit{color:var(--purple)}
+    .scnt{font-size:10px;font-family:monospace;color:var(--muted);background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:1px 6px}
 
     /* Card grid */
-    .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 8px; padding: 0 14px; }
-    @media(max-width: 400px) { .card-grid { grid-template-columns: 1fr 1fr; } }
-    @media(min-width: 700px) { .card-grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); } }
+    .cgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;padding:0 14px}
+    @media(min-width:500px){.cgrid{grid-template-columns:repeat(3,1fr)}}
+    @media(min-width:700px){.cgrid{grid-template-columns:repeat(4,1fr)}}
+    @media(min-width:960px){.cgrid{grid-template-columns:repeat(5,1fr)}}
 
     /* Player card */
-    .pcard { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 12px; position: relative; overflow: hidden; animation: fadeIn .3s ease; transition: border-color .15s; -webkit-tap-highlight-color: transparent; }
-    .pcard:hover { border-color: var(--border2); }
+    .pcard{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:11px 12px;position:relative;overflow:hidden;animation:fadeIn .3s ease}
+    .pcard::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:3px 0 0 3px}
+    .pcard.good::before{background:var(--green)}
+    .pcard.tough::before{background:var(--red)}
+    .pcard.nogame::before{background:var(--muted);opacity:.4}
+    .pcard.neutral::before{background:var(--border2)}
 
-    /* Matchup tint on left edge */
-    .pcard::before { content:''; position:absolute; left:0; top:0; bottom:0; width:3px; border-radius:3px 0 0 3px; }
-    .pcard.good-matchup::before  { background: var(--green); }
-    .pcard.tough-matchup::before { background: var(--red); }
-    .pcard.no-game::before       { background: var(--muted); }
-    .pcard.neutral::before       { background: var(--border2); }
+    .pc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:4px;margin-bottom:4px}
+    .pc-name{font-size:12px;font-weight:700;color:var(--bright);line-height:1.25;flex:1}
+    .pc-pos{font-size:9px;font-family:monospace;font-weight:700;color:var(--blue);background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.15);border-radius:3px;padding:1px 4px;flex-shrink:0;align-self:flex-start}
+    .pc-team{font-size:10px;font-family:monospace;color:var(--muted);margin-bottom:8px}
+    .pc-status{font-size:9px;color:var(--red);font-family:monospace;margin-left:4px}
 
-    .pcard-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 8px; }
-    .pcard-name { font-size: 13px; font-weight: 700; color: var(--bright); line-height: 1.2; }
-    .pcard-pos { font-size: 9px; font-family: monospace; font-weight: 700; color: var(--blue); background: rgba(59,130,246,.1); border: 1px solid rgba(59,130,246,.15); border-radius: 3px; padding: 1px 4px; flex-shrink: 0; margin-left: 4px; }
+    /* Stats block */
+    .pc-stats{display:flex;flex-direction:column;gap:3px;margin-bottom:8px}
+    .stat-row{display:flex;justify-content:space-between;align-items:center}
+    .stat-lbl{font-size:9px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-family:monospace}
+    .stat-val{font-size:11px;font-family:monospace;font-weight:600}
 
-    .pcard-team { font-size: 10px; font-family: monospace; color: var(--muted); margin-bottom: 8px; }
+    /* Stat colors */
+    .sv-great{color:#10b981}.sv-good{color:#34d399}.sv-avg{color:var(--text)}.sv-poor{color:#f59e0b}.sv-bad{color:#ef4444}.sv-na{color:var(--muted)}
 
-    .pcard-divider { height: 1px; background: var(--border); margin: 8px 0; }
+    .pc-div{height:1px;background:var(--border);margin:8px 0}
 
-    .pcard-matchup { font-size: 11px; }
-    .matchup-vs   { font-size: 9px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: 3px; }
-    .matchup-sp   { color: var(--bright); font-weight: 600; font-size: 12px; line-height: 1.2; }
-    .matchup-hand { display: inline-block; font-size: 9px; font-family: monospace; font-weight: 700; padding: 1px 4px; border-radius: 3px; margin-top: 2px; }
-    .no-game-txt  { font-size: 11px; color: var(--muted); font-style: italic; }
+    /* Matchup */
+    .pc-opp{font-size:10px}
+    .opp-lbl{font-size:9px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:3px}
+    .opp-name{color:var(--bright);font-weight:600;font-size:11px;line-height:1.3}
+    .opp-hand{display:inline-block;font-size:9px;font-family:monospace;font-weight:700;padding:1px 4px;border-radius:3px;margin-top:2px}
+    .nogame-txt{font-size:10px;color:var(--muted);font-style:italic}
 
-    /* Loading skeleton */
-    .skeleton { background: linear-gradient(90deg, var(--bg3) 25%, var(--bg2) 50%, var(--bg3) 75%); background-size: 200% 100%; animation: shimmer 1.4s infinite; border-radius: 6px; height: 12px; margin: 4px 0; }
-    @keyframes shimmer { 0%{background-position:-200% 0} 100%{background-position:200% 0} }
-    .skel-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 12px; }
-
-    .hidden { display: none !important; }
-    .spinner { display: inline-block; width: 12px; height: 12px; border: 2px solid rgba(245,158,11,.2); border-top-color: var(--accent); border-radius: 50%; animation: spin .8s linear infinite; vertical-align: middle; }
+    .hidden{display:none!important}
+    .spinner{display:inline-block;width:12px;height:12px;border:2px solid rgba(245,158,11,.2);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;vertical-align:middle}
   </style>
 </head>
 <body>
 
-  <!-- ══ CREDS ══ -->
-  <div class="auth-wrap" id="screen-creds">
-    <div class="auth-box">
-      <div class="auth-logo">
-        <div class="icon">⚾</div>
-        <h1>Diamond Edge</h1>
-        <p>Fantasy Baseball · MLB 2026</p>
+<!-- Loading overlay -->
+<div id="load-overlay">
+  <div class="load-spinner"></div>
+  <div class="load-msg" id="load-msg">Loading...</div>
+  <div class="load-sub" id="load-sub">Fetching roster &amp; Statcast data</div>
+</div>
+
+<!-- Creds -->
+<div class="auth-wrap hidden" id="screen-creds">
+  <div class="auth-box">
+    <div class="auth-logo">
+      <div class="icon">⚾</div>
+      <h1>Diamond Edge</h1>
+      <p>Fantasy Baseball · MLB 2026</p>
+    </div>
+    <div class="field"><label>Client ID</label><input id="cid" type="text" placeholder="dj0y..." autocomplete="off" spellcheck="false"/></div>
+    <div class="field"><label>Client Secret</label>
+      <div class="pw-row"><input id="csec" type="password" placeholder="••••••••••••" autocomplete="off"/>
+      <button class="pw-toggle" onclick="togglePw()" tabindex="-1">👁</button></div>
+    </div>
+    <button class="abtn abtn-gold" id="creds-btn" onclick="saveCreds()" disabled>Continue →</button>
+    <p class="auth-note">🔒 Credentials stay in your browser only</p>
+  </div>
+</div>
+
+<!-- OAuth -->
+<div class="auth-wrap hidden" id="screen-oauth">
+  <div class="auth-box">
+    <div class="auth-logo">
+      <div class="icon">🔑</div>
+      <h1>Authorize Yahoo</h1>
+      <p>Read-only access to your fantasy team</p>
+    </div>
+    <div id="oauth-idle">
+      <div class="auth-info">
+        1. Tap below — Yahoo opens in a new tab<br/>
+        2. Log in and tap <strong style="color:#e2e8f0">Agree</strong><br/>
+        3. You'll see an error page — that's normal<br/>
+        4. Copy the <code style="font-family:monospace;background:rgba(59,130,246,.2);padding:1px 4px;border-radius:3px">code=</code> value from the URL
       </div>
-      <div class="field"><label>Client ID</label><input id="cid" type="text" placeholder="dj0y..." autocomplete="off" spellcheck="false"/></div>
-      <div class="field"><label>Client Secret</label>
-        <div class="pw-row"><input id="csec" type="password" placeholder="••••••••••••" autocomplete="off"/>
-        <button class="pw-toggle" onclick="togglePw()" tabindex="-1">👁</button></div>
+      <button class="abtn abtn-blue" onclick="startAuth()">🔑 Open Yahoo Authorization</button>
+      <button class="abtn abtn-ghost" onclick="skipAuth()">Skip for now</button>
+    </div>
+    <div id="oauth-waiting" class="hidden">
+      <div class="field" style="margin-top:4px">
+        <label>Paste the code= value (or full URL)</label>
+        <input id="auth-code" type="text" placeholder="Paste here..." autocomplete="off" spellcheck="false"/>
       </div>
-      <button class="abtn abtn-gold" id="creds-btn" onclick="saveCreds()" disabled>Continue →</button>
-      <p class="auth-note">🔒 Credentials stay in your browser only</p>
+      <button class="abtn abtn-gold" id="exchange-btn" onclick="exchangeCode()" disabled>Connect →</button>
+      <button class="abtn abtn-ghost" onclick="showOAuthIdle()">← Back</button>
+      <div class="auth-err" id="oauth-err"></div>
+    </div>
+    <div id="oauth-exchanging" class="hidden" style="text-align:center;padding:20px 0">
+      <div class="spinner"></div>
+      <div style="color:var(--accent);margin-top:12px;font-size:13px">Connecting...</div>
+    </div>
+  </div>
+</div>
+
+<!-- Dashboard -->
+<div id="dashboard">
+  <div id="topbar">
+    <div class="tb-left">
+      <div class="tb-icon">⚾</div>
+      <span class="tb-title">Diamond Edge</span>
+    </div>
+    <div class="tb-right">
+      <div class="sdot" id="sdot"></div>
+      <span id="status-text">—</span>
+      <button id="reconnect-btn" onclick="goReconnect()">↺ Reconnect</button>
     </div>
   </div>
 
-  <!-- ══ OAUTH ══ -->
-  <div class="auth-wrap hidden" id="screen-oauth">
-    <div class="auth-box">
-      <div class="auth-logo">
-        <div class="icon">🔑</div>
-        <h1>Authorize Yahoo</h1>
-        <p>Read-only access to your fantasy team</p>
-      </div>
-      <div id="oauth-idle">
-        <div class="auth-info">
-          1. Tap below — Yahoo opens in a new tab<br/>
-          2. Log in and tap <strong style="color:#e2e8f0">Agree</strong><br/>
-          3. You'll see an error page — that's normal<br/>
-          4. Copy the <code style="font-family:monospace;background:rgba(59,130,246,.2);padding:1px 4px;border-radius:3px">code=</code> value from the URL
-        </div>
-        <button class="abtn abtn-blue" onclick="startAuth()">🔑 Open Yahoo Authorization</button>
-        <button class="abtn abtn-ghost" onclick="skipAuth()">Skip for now</button>
-      </div>
-      <div id="oauth-waiting" class="hidden">
-        <div class="field" style="margin-top:4px">
-          <label>Paste the code= value (or full URL)</label>
-          <input id="auth-code" type="text" placeholder="Paste here..." autocomplete="off" spellcheck="false"/>
-        </div>
-        <button class="abtn abtn-gold" id="exchange-btn" onclick="exchangeCode()" disabled>Connect →</button>
-        <button class="abtn abtn-ghost" onclick="showOAuthIdle()">← Back</button>
-        <div class="auth-err" id="oauth-err"></div>
-      </div>
-      <div id="oauth-exchanging" class="hidden" style="text-align:center;padding:20px 0">
-        <div class="spinner"></div>
-        <div style="color:var(--accent);margin-top:12px;font-size:13px">Connecting...</div>
-      </div>
-    </div>
+  <div id="sched-strip">
+    <span class="sched-lbl">Today</span>
+    <span id="games-out" style="color:var(--muted);font-size:11px;font-family:monospace">—</span>
   </div>
 
-  <!-- ══ DASHBOARD ══ -->
-  <div id="dashboard">
-    <div id="topbar">
-      <div class="tb-left">
-        <div class="tb-icon">⚾</div>
-        <span class="tb-title">Diamond Edge</span>
-      </div>
-      <div class="tb-right">
-        <div class="status-dot" id="sdot"></div>
-        <span id="status-text">Loading</span>
-        <button id="reconnect" onclick="goReconnect()">↺ Reconnect</button>
-      </div>
-    </div>
-
-    <div id="sched-strip">
-      <span class="sched-label">Today</span>
-      <span id="games-out" style="color:var(--muted);font-size:11px;font-family:monospace">Loading schedule...</span>
-    </div>
-
-    <div class="section-hdr">
-      <span class="section-label batters">⚔ Batters</span>
-      <span class="section-count" id="bat-count"></span>
-    </div>
-    <div class="card-grid" id="bat-grid"></div>
-
-    <div class="section-hdr" style="margin-top:16px">
-      <span class="section-label pitchers">⚡ Pitchers</span>
-      <span class="section-count" id="pit-count"></span>
-    </div>
-    <div class="card-grid" id="pit-grid"></div>
+  <div class="shdr">
+    <span class="slbl bat">⚔ Batters</span>
+    <span class="scnt" id="bat-count"></span>
   </div>
+  <div class="cgrid" id="bat-grid"></div>
+
+  <div class="shdr" style="margin-top:16px">
+    <span class="slbl pit">⚡ Pitchers</span>
+    <span class="scnt" id="pit-count"></span>
+  </div>
+  <div class="cgrid" id="pit-grid"></div>
+</div>
 
 <script>
 const API    = 'https://yahoo-fantasy-proxy.vercel.app';
 const SEASON = '2026';
 
-// MLB Stats API uses full team names/IDs — map to Yahoo abbrs
 const MLB_ABB = {
   'NYY':'NYY','BOS':'BOS','TB':'TB','TOR':'TOR','BAL':'BAL',
   'CLE':'CLE','DET':'DET','CWS':'CWS','KC':'KC','MIN':'MIN',
@@ -221,29 +225,42 @@ const MLB_ABB = {
   'ATL':'ATL','MIA':'MIA','NYM':'NYM','PHI':'PHI','WSH':'WAS',
   'CHC':'CHC','CIN':'CIN','MIL':'MIL','PIT':'PIT','STL':'STL',
   'ARI':'ARI','COL':'COL','LAD':'LAD','SD':'SD','SF':'SF',
-  // alternates MLB API sometimes returns
   'TBR':'TB','KCR':'KC','CHW':'CWS','SDP':'SD','SFG':'SF','WSN':'WAS','WAS':'WAS'
 };
 
 const ST = {
   clientId:'', clientSecret:'', token:null,
   leagueKey:null, teamKey:null, pkceVerifier:'',
-  teamToPitcher:{},   // yahoo abbr → {name, hand}
+  teamToPitcher:{},
+  savantBat:{}, savantPit:{},
+  players:[],
 };
 
-// ── INIT ──
+// ── BOOT ──
+window.addEventListener('load', ()=>{
+  const saved = sessionStorage.getItem('de_tok');
+  const cid   = sessionStorage.getItem('de_cid');
+  const csec  = sessionStorage.getItem('de_csec');
+  if(saved && cid && csec){
+    ST.token=saved; ST.clientId=cid; ST.clientSecret=csec;
+    startDashboard();
+  } else {
+    document.getElementById('load-overlay').classList.add('gone');
+    show('screen-creds');
+  }
+});
+
+// ── CREDS ──
 document.getElementById('cid').addEventListener('input', chkCreds);
 document.getElementById('csec').addEventListener('input', chkCreds);
-function chkCreds(){
-  document.getElementById('creds-btn').disabled =
-    !document.getElementById('cid').value.trim() ||
-    !document.getElementById('csec').value.trim();
-}
+function chkCreds(){ document.getElementById('creds-btn').disabled = !document.getElementById('cid').value.trim()||!document.getElementById('csec').value.trim(); }
 function togglePw(){ const i=document.getElementById('csec'); i.type=i.type==='password'?'text':'password'; }
 
 function saveCreds(){
-  ST.clientId  = document.getElementById('cid').value.trim();
-  ST.clientSecret = document.getElementById('csec').value.trim();
+  ST.clientId    = document.getElementById('cid').value.trim();
+  ST.clientSecret= document.getElementById('csec').value.trim();
+  sessionStorage.setItem('de_cid',  ST.clientId);
+  sessionStorage.setItem('de_csec', ST.clientSecret);
   const saved = sessionStorage.getItem('de_tok');
   if(saved){ ST.token=saved; startDashboard(); return; }
   show('screen-oauth');
@@ -286,8 +303,7 @@ async function exchangeCode(){
   }catch(e){
     showOAuthIdle();
     const err=document.getElementById('oauth-err');
-    err.textContent='⚠️ '+e.message;
-    err.style.display='block';
+    err.textContent='⚠️ '+e.message; err.style.display='block';
   }
 }
 
@@ -297,29 +313,45 @@ function goReconnect(){ sessionStorage.removeItem('de_tok'); show('screen-oauth'
 // ── SCREENS ──
 function show(id){
   ['screen-creds','screen-oauth'].forEach(s=>document.getElementById(s).classList.toggle('hidden',s!==id));
-  document.getElementById('dashboard').classList.toggle('on', id==='dashboard');
+  document.getElementById('dashboard').classList.toggle('on',id==='dashboard');
 }
 
-// ── START DASHBOARD ──
+// ── MAIN LOAD ──
 async function startDashboard(){
   show('dashboard');
-  setStatus('loading','Loading...');
-  showSkeletons();
-  await loadSchedule();
+  setLoad('Loading schedule & stats...');
+
+  // Load everything in parallel, wait for all before rendering
+  await Promise.allSettled([
+    loadSchedule(),
+    loadSavant('batter'),
+    loadSavant('pitcher'),
+  ]);
+
   if(ST.token){
     try{
+      setLoad('Loading your roster...');
       await loadLeague();
       await loadRoster();
     }catch(e){
-      setStatus('err','Error: '+e.message);
-      document.getElementById('reconnect').style.display='block';
+      hideLoad();
+      setStatus('err', e.message.slice(0,40));
+      document.getElementById('reconnect-btn').style.display='block';
+      return;
     }
   } else {
+    hideLoad();
     setStatus('err','No Yahoo connection');
-    document.getElementById('bat-grid').innerHTML = noYahooMsg();
-    document.getElementById('pit-grid').innerHTML = '';
+    document.getElementById('bat-grid').innerHTML = '<div style="color:var(--muted);font-size:12px;grid-column:1/-1;padding:8px 0">Connect Yahoo to see your roster.</div>';
+    return;
   }
+
+  hideLoad();
+  setStatus('live', new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}));
 }
+
+function setLoad(msg){ document.getElementById('load-msg').textContent=msg; }
+function hideLoad(){ document.getElementById('load-overlay').classList.add('gone'); }
 
 // ── SCHEDULE ──
 async function loadSchedule(){
@@ -329,58 +361,76 @@ async function loadSchedule(){
     const data=await res.json();
     const games=data.games||[];
 
-    // Build pitcher map keyed by Yahoo team abbr
     games.forEach(g=>{
-      const awayAbb = MLB_ABB[g.away.team] || g.away.team;
-      const homeAbb = MLB_ABB[g.home.team] || g.home.team;
-      if(g.away.probablePitcher){
-        // Away pitcher faces HOME batters → home team batters face away pitcher
-        ST.teamToPitcher[homeAbb] = {name:g.away.probablePitcher.name, hand:g.away.probablePitcher.throws};
-        // Away pitcher's team is away
-        ST.teamToPitcher['_sp_'+awayAbb] = {name:g.away.probablePitcher.name, hand:g.away.probablePitcher.throws};
-      }
-      if(g.home.probablePitcher){
-        ST.teamToPitcher[awayAbb] = {name:g.home.probablePitcher.name, hand:g.home.probablePitcher.throws};
-        ST.teamToPitcher['_sp_'+homeAbb] = {name:g.home.probablePitcher.name, hand:g.home.probablePitcher.throws};
-      }
+      const aAbb=MLB_ABB[g.away.team]||g.away.team;
+      const hAbb=MLB_ABB[g.home.team]||g.home.team;
+      // Batter on home team faces away pitcher, and vice versa
+      if(g.away.probablePitcher) ST.teamToPitcher[hAbb]={name:g.away.probablePitcher.name,hand:g.away.probablePitcher.throws};
+      if(g.home.probablePitcher) ST.teamToPitcher[aAbb]={name:g.home.probablePitcher.name,hand:g.home.probablePitcher.throws};
     });
 
-    // Render schedule strip
-    const out = document.getElementById('games-out');
+    const out=document.getElementById('games-out');
     if(!games.length){ out.textContent='No games today'; return; }
-    out.innerHTML = games.map(g=>{
-      const awayAbb=MLB_ABB[g.away.team]||g.away.team;
-      const homeAbb=MLB_ABB[g.home.team]||g.home.team;
-      const awayP=g.away.probablePitcher;
-      const homeP=g.home.probablePitcher;
-      return `<span class="game-pill">
-        ${awayAbb} @ ${homeAbb}
-        ${awayP?`<span class="sp">${awayP.name.split(' ').pop()}</span><span class="hand hand-${awayP.throws||'?'}">${awayP.throws||'?'}</span>`:''}
-        <span style="color:var(--muted)">vs</span>
-        ${homeP?`<span class="sp">${homeP.name.split(' ').pop()}</span><span class="hand hand-${homeP.throws||'?'}">${homeP.throws||'?'}</span>`:''}
+    out.innerHTML=games.map(g=>{
+      const aAbb=MLB_ABB[g.away.team]||g.away.team;
+      const hAbb=MLB_ABB[g.home.team]||g.home.team;
+      const aP=g.away.probablePitcher, hP=g.home.probablePitcher;
+      return`<span class="gpill">
+        ${aP?`<span class="hbadge hand-${aP.throws||'?'}">${aP.throws||'?'}</span><span class="sp">${lastName(aP.name)}</span> `:''}
+        ${aAbb} @ ${hAbb}
+        ${hP?` <span class="sp">${lastName(hP.name)}</span><span class="hbadge hand-${hP.throws||'?'}">${hP.throws||'?'}</span>`:''}
       </span>`;
     }).join('');
-  }catch(e){
-    document.getElementById('games-out').textContent='Schedule unavailable';
-    console.error('Schedule',e);
-  }
+  }catch(e){ document.getElementById('games-out').textContent='Schedule unavailable'; }
+}
+
+function lastName(n){ return n?n.split(' ').pop():n; }
+
+// ── SAVANT ──
+async function loadSavant(type){
+  try{
+    const res=await fetch(API+'/api/savant?type='+type+'&season='+SEASON);
+    const rows=await res.json();
+    if(!Array.isArray(rows)) return;
+    const map={};
+    rows.forEach(r=>{
+      const a=norm((r.last_name||'')+' '+(r.first_name||''));
+      const b=norm((r.first_name||'')+' '+(r.last_name||''));
+      if(a) map[a]=r;
+      if(b) map[b]=r;
+    });
+    if(type==='batter') ST.savantBat=map;
+    else                ST.savantPit=map;
+  }catch(e){ console.error('Savant',type,e); }
+}
+
+function norm(s){ return s.toLowerCase().replace(/[^a-z ]/g,'').replace(/\s+/g,' ').trim(); }
+
+function getSavant(name, isPitcher){
+  const key=norm(name);
+  const src=isPitcher?ST.savantPit:ST.savantBat;
+  if(src[key]) return src[key];
+  // Fallback: match by last name only if unique
+  const parts=key.split(' ');
+  const last=parts[parts.length-1];
+  const hits=Object.entries(src).filter(([k])=>k.endsWith(' '+last));
+  return hits.length===1?hits[0][1]:null;
 }
 
 // ── YAHOO ──
 async function yFetch(ep){
   const res=await fetch(API+'/api/yahoo?endpoint='+encodeURIComponent(ep),{headers:{Authorization:'Bearer '+ST.token}});
-  if(res.status===401){ document.getElementById('reconnect').style.display='block'; throw new Error('Session expired — tap Reconnect'); }
+  if(res.status===401){ document.getElementById('reconnect-btn').style.display='block'; throw new Error('Session expired — tap Reconnect'); }
   return res.json();
 }
 
 async function loadLeague(){
   const d=await yFetch('users;use_login=1/games;game_codes=mlb;seasons='+SEASON+'/leagues?');
   try{ ST.leagueKey=d.fantasy_content.users[0].user[1].games[0].game[1].leagues[0].league[0].league_key; }
-  catch(e){ throw new Error('Could not find your 2026 league. Make sure your Yahoo Fantasy season is active.'); }
+  catch(e){ throw new Error('Could not find your 2026 MLB fantasy league.'); }
 }
 
 async function loadRoster(){
-  // Find my team
   const td=await yFetch('league/'+ST.leagueKey+'/teams?');
   const teams=td.fantasy_content.league[1].teams;
   for(let i=0;i<teams.count;i++){
@@ -392,7 +442,6 @@ async function loadRoster(){
   }
   if(!ST.teamKey) ST.teamKey=teams[0].team[0].find(x=>x&&x.team_key).team_key;
 
-  // Get roster
   const rd=await yFetch('team/'+ST.teamKey+'/roster/players?');
   const raw=rd.fantasy_content.team[1].roster[0].players;
   const batters=[], pitchers=[];
@@ -400,89 +449,103 @@ async function loadRoster(){
   for(let i=0;i<raw.count;i++){
     const pArr=raw[i].player[0];
     const get=k=>{const o=pArr.find(x=>x&&x[k]!==undefined);return o?o[k]:null;};
-    const name = get('full_name')||(get('name')&&get('name').full)||'?';
-    const team = (get('editorial_team_abbr')||'?').toUpperCase();
-    const pos  = get('display_position')||'?';
-    const status = get('status')||'';
-    const isSP = /\bSP\b/.test(pos);
-    const isRP = /\bRP\b/.test(pos);
-    const isPitcher = isSP||isRP||/\bP\b/.test(pos);
-
-    const p={name,team,pos,status,isSP,isRP,isPitcher};
-    if(isPitcher) pitchers.push(p); else batters.push(p);
+    const name    = get('full_name')||(get('name')&&get('name').full)||'?';
+    const team    = (get('editorial_team_abbr')||'?').toUpperCase();
+    const pos     = get('display_position')||'?';
+    const status  = get('status')||'';
+    const isPitch = /SP|RP|\bP\b/.test(pos);
+    const sav     = getSavant(name, isPitch);
+    const p       = {name,team,pos,status,isPitch,sav};
+    if(isPitch) pitchers.push(p); else batters.push(p);
   }
 
-  renderCards('bat-grid','bat-count',batters,false);
-  renderCards('pit-grid','pit-count',pitchers,true);
-  setStatus('live', new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}));
+  renderSection('bat-grid','bat-count', batters, false);
+  renderSection('pit-grid','pit-count', pitchers, true);
 }
 
-// ── RENDER CARDS ──
-function renderCards(gridId, countId, players, isPitcher){
-  document.getElementById(countId).textContent = players.length+' players';
+// ── RENDER ──
+function renderSection(gridId, countId, players, isPitch){
+  document.getElementById(countId).textContent=players.length+' players';
   const grid=document.getElementById(gridId);
-  if(!players.length){ grid.innerHTML=`<div style="color:var(--muted);font-size:12px;padding:4px 0">None on roster</div>`; return; }
-
-  grid.innerHTML = players.map(p=>{
-    const matchup = getMatchup(p);
-    const cardClass = matchup.hasGame
-      ? (matchup.quality==='good' ? 'good-matchup' : matchup.quality==='tough' ? 'tough-matchup' : 'neutral')
-      : 'no-game';
-
-    const matchupHtml = matchup.hasGame
-      ? `<div class="matchup-vs">vs today</div>
-         <div class="matchup-sp">${matchup.pitcher}</div>
-         <div><span class="matchup-hand hand-${matchup.hand||'?'}">${matchup.hand||'?'}</span></div>`
-      : `<div class="no-game-txt">No game today</div>`;
-
-    const statusBadge = p.status ? `<span style="font-size:9px;color:var(--red);font-family:monospace;margin-left:4px">${p.status}</span>` : '';
-
-    return `<div class="pcard ${cardClass}">
-      <div class="pcard-top">
-        <div class="pcard-name">${p.name}${statusBadge}</div>
-        <div class="pcard-pos">${p.pos}</div>
-      </div>
-      <div class="pcard-team">${p.team}</div>
-      <div class="pcard-divider"></div>
-      <div class="pcard-matchup">${matchupHtml}</div>
-    </div>`;
-  }).join('');
+  if(!players.length){ grid.innerHTML='<div style="color:var(--muted);font-size:12px;grid-column:1/-1">None on roster</div>'; return; }
+  grid.innerHTML=players.map(p=>makeCard(p,isPitch)).join('');
 }
 
-function getMatchup(p){
-  const pitcher = ST.teamToPitcher[p.team];
-  if(!pitcher) return {hasGame:false};
-  const hand = pitcher.hand;
-  // Simple quality heuristic — can refine with Statcast later
-  // For now: just flag as neutral, good/tough added in next phase
-  return {hasGame:true, pitcher:pitcher.name, hand, quality:'neutral'};
-}
+function makeCard(p, isPitch){
+  const m   = ST.teamToPitcher[p.team];
+  const sav = p.sav;
 
-// ── UTILS ──
-function setStatus(type,text){
-  const dot=document.getElementById('sdot');
-  dot.className='status-dot'+(type==='live'?' live':type==='err'?' err':'');
-  document.getElementById('status-text').textContent=text;
-}
+  // Matchup edge color
+  let edge='nogame';
+  if(m){ edge='neutral'; }
 
-function showSkeletons(){
-  const skel=(n,id)=>{
-    document.getElementById(id).innerHTML=Array(n).fill(0).map(()=>`
-      <div class="skel-card">
-        <div class="skeleton" style="width:70%;height:13px;margin-bottom:6px"></div>
-        <div class="skeleton" style="width:30%;height:10px;margin-bottom:10px"></div>
-        <div class="skeleton" style="width:90%;height:10px"></div>
-      </div>`).join('');
-  };
-  skel(8,'bat-grid');
-  skel(5,'pit-grid');
-}
+  // Stats block
+  let statsHtml='';
+  if(!isPitch){
+    // Batter stats
+    const xwoba  = sav?pf(sav.xwoba):null;
+    const barrel = sav?pf(sav.barrel_batted_rate):null;
+    const ev     = sav?pf(sav.exit_velocity_avg):null;
+    statsHtml=`
+      <div class="pc-stats">
+        <div class="stat-row"><span class="stat-lbl">xwOBA</span><span class="stat-val ${sc(xwoba,'xwoba')}">${xwoba!=null?xwoba.toFixed(3):'—'}</span></div>
+        <div class="stat-row"><span class="stat-lbl">Barrel%</span><span class="stat-val ${sc(barrel,'barrel')}">${barrel!=null?barrel.toFixed(1)+'%':'—'}</span></div>
+        <div class="stat-row"><span class="stat-lbl">Avg EV</span><span class="stat-val ${sc(ev,'ev')}">${ev!=null?ev.toFixed(1):'—'}</span></div>
+      </div>`;
+  } else {
+    // Pitcher stats
+    const xera  = sav?pf(sav.xera):null;
+    const csw   = sav?pf(sav.csw_rate):null;
+    const kpct  = sav?pf(sav.k_percent):null;
+    statsHtml=`
+      <div class="pc-stats">
+        <div class="stat-row"><span class="stat-lbl">xERA</span><span class="stat-val ${sc(xera,'xera')}">${xera!=null?xera.toFixed(2):'—'}</span></div>
+        <div class="stat-row"><span class="stat-lbl">CSW%</span><span class="stat-val ${sc(csw,'csw')}">${csw!=null?csw.toFixed(1)+'%':'—'}</span></div>
+        <div class="stat-row"><span class="stat-lbl">K%</span><span class="stat-val ${sc(kpct,'kpct')}">${kpct!=null?kpct.toFixed(1)+'%':'—'}</span></div>
+      </div>`;
+  }
 
-function noYahooMsg(){
-  return`<div style="grid-column:1/-1;color:var(--muted);font-size:13px;padding:8px 0;line-height:1.7">
-    No Yahoo connection.<br/>
-    <span style="font-size:11px">Refresh the page and connect your account to see your roster.</span>
+  // Matchup block
+  const matchupHtml = m
+    ? `<div class="pc-opp">
+        <div class="opp-lbl">vs today</div>
+        <div class="opp-name">${m.name}</div>
+        <span class="opp-hand hand-${m.hand||'?'}">${m.hand||'?'}</span>
+       </div>`
+    : `<div class="nogame-txt">No game today</div>`;
+
+  const statusHtml = p.status?`<span class="pc-status">${p.status}</span>`:'';
+
+  return`<div class="pcard ${edge}">
+    <div class="pc-top">
+      <div class="pc-name">${p.name}${statusHtml}</div>
+      <div class="pc-pos">${p.pos}</div>
+    </div>
+    <div class="pc-team">${p.team}</div>
+    ${statsHtml}
+    <div class="pc-div"></div>
+    ${matchupHtml}
   </div>`;
+}
+
+// ── STAT HELPERS ──
+function pf(v){ const n=parseFloat(v); return isNaN(n)?null:n; }
+
+function sc(v,type){
+  if(v==null) return 'sv-na';
+  if(type==='xwoba')  return v>=.380?'sv-great':v>=.340?'sv-good':v>=.310?'sv-avg':v>=.280?'sv-poor':'sv-bad';
+  if(type==='barrel') return v>=12?'sv-great':v>=8?'sv-good':v>=5?'sv-avg':'sv-poor';
+  if(type==='ev')     return v>=92?'sv-great':v>=90?'sv-good':v>=88?'sv-avg':'sv-poor';
+  if(type==='xera')   return v<=3.0?'sv-great':v<=3.75?'sv-good':v<=4.25?'sv-avg':v<=5.0?'sv-poor':'sv-bad';
+  if(type==='csw')    return v>=32?'sv-great':v>=28?'sv-good':v>=24?'sv-avg':'sv-poor';
+  if(type==='kpct')   return v>=28?'sv-great':v>=24?'sv-good':v>=20?'sv-avg':'sv-poor';
+  return 'sv-avg';
+}
+
+function setStatus(type,text){
+  const d=document.getElementById('sdot');
+  d.className='sdot'+(type==='live'?' live':type==='err'?' err':'');
+  document.getElementById('status-text').textContent=text;
 }
 </script>
 </body>
