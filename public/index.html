@@ -80,10 +80,10 @@
     .scnt{font-size:10px;font-family:monospace;color:var(--muted);background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:1px 6px}
 
     /* Card grid */
-    .cgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:0 14px}
-    @media(min-width:500px){.cgrid{grid-template-columns:repeat(2,1fr)}}
-    @media(min-width:700px){.cgrid{grid-template-columns:repeat(3,1fr)}}
-    @media(min-width:960px){.cgrid{grid-template-columns:repeat(4,1fr)}}
+    .cgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;padding:0 14px}
+    @media(min-width:500px){.cgrid{grid-template-columns:repeat(3,1fr)}}
+    @media(min-width:700px){.cgrid{grid-template-columns:repeat(4,1fr)}}
+    @media(min-width:960px){.cgrid{grid-template-columns:repeat(5,1fr)}}
 
     /* Player card */
     .pcard{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:11px 12px;position:relative;overflow:hidden;animation:fadeIn .3s ease}
@@ -94,7 +94,7 @@
     .pcard.neutral::before{background:var(--border2)}
 
     .pc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:4px;margin-bottom:4px}
-    .pc-name{font-size:14px;font-weight:700;color:var(--bright);line-height:1.25;flex:1}
+    .pc-name{font-size:12px;font-weight:700;color:var(--bright);line-height:1.25;flex:1}
     .pc-pos{font-size:9px;font-family:monospace;font-weight:700;color:var(--blue);background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.15);border-radius:3px;padding:1px 4px;flex-shrink:0;align-self:flex-start}
     .pc-team{font-size:10px;font-family:monospace;color:var(--muted);margin-bottom:8px}
     .pc-status{font-size:9px;color:var(--red);font-family:monospace;margin-left:4px}
@@ -102,18 +102,23 @@
     /* Stats block */
     .pc-stats{display:flex;flex-direction:column;gap:3px;margin-bottom:8px}
     .stat-row{display:flex;justify-content:space-between;align-items:center}
-    .stat-lbl{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-family:monospace}
-    .stat-val{font-size:13px;font-family:monospace;font-weight:600}
+    .stat-lbl{font-size:9px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-family:monospace}
+    .stat-val{font-size:11px;font-family:monospace;font-weight:600}
 
     /* Stat colors */
     .sv-great{color:#10b981}.sv-good{color:#34d399}.sv-avg{color:var(--text)}.sv-poor{color:#f59e0b}.sv-bad{color:#ef4444}.sv-na{color:var(--muted)}
 
     .pc-div{height:1px;background:var(--border);margin:8px 0}
+    .pc-div-soft{height:1px;background:rgba(255,255,255,.04);margin:6px 0}
+    .pc-window-lbl{font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);font-family:monospace;margin-bottom:4px;font-weight:700}
+    .stat-row-sm{display:flex;justify-content:space-between;align-items:center;margin-bottom:2px}
+    .stat-lbl-sm{font-size:9px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-family:monospace}
+    .stat-val-sm{font-size:11px;font-family:monospace;font-weight:600;color:var(--text)}
 
     /* Matchup */
     .pc-opp{font-size:10px}
     .opp-lbl{font-size:9px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:3px}
-    .opp-name{color:var(--bright);font-weight:600;font-size:13px;line-height:1.3}
+    .opp-name{color:var(--bright);font-weight:600;font-size:11px;line-height:1.3}
     .opp-hand{display:inline-block;font-size:9px;font-family:monospace;font-weight:700;padding:1px 4px;border-radius:3px;margin-top:2px}
     .nogame-txt{font-size:10px;color:var(--muted);font-style:italic}
 
@@ -233,6 +238,7 @@ const ST = {
   leagueKey:null, teamKey:null, pkceVerifier:'',
   teamToPitcher:{},
   savantBat:{}, savantPit:{},
+  mlbStats:{},  // keyed by mlbId: {avg,obp,ops,hr,rbi}
   players:[],
 };
 
@@ -364,12 +370,9 @@ async function loadSchedule(){
     games.forEach(g=>{
       const aAbb=MLB_ABB[g.away.team]||g.away.team;
       const hAbb=MLB_ABB[g.home.team]||g.home.team;
-      // Home batters face away pitcher (or TBD if not announced)
-      ST.teamToPitcher[hAbb]={name:g.away.probablePitcher?.name||'TBD',hand:g.away.probablePitcher?.throws||null,hasGame:true};
-      ST.teamToPitcher[g.home.team]={name:g.away.probablePitcher?.name||'TBD',hand:g.away.probablePitcher?.throws||null,hasGame:true};
-      // Away batters face home pitcher (or TBD if not announced)
-      ST.teamToPitcher[aAbb]={name:g.home.probablePitcher?.name||'TBD',hand:g.home.probablePitcher?.throws||null,hasGame:true};
-      ST.teamToPitcher[g.away.team]={name:g.home.probablePitcher?.name||'TBD',hand:g.home.probablePitcher?.throws||null,hasGame:true};
+      // Batter on home team faces away pitcher, and vice versa
+      if(g.away.probablePitcher) ST.teamToPitcher[hAbb]={name:g.away.probablePitcher.name,hand:g.away.probablePitcher.throws};
+      if(g.home.probablePitcher) ST.teamToPitcher[aAbb]={name:g.home.probablePitcher.name,hand:g.home.probablePitcher.throws};
     });
 
     const out=document.getElementById('games-out');
@@ -462,8 +465,56 @@ async function loadRoster(){
     if(isPitch) pitchers.push(p); else batters.push(p);
   }
 
+  // Fetch MLB player IDs and 14-day stats for batters
+  const allPlayers = [...batters, ...pitchers];
+  await loadPlayerStats(allPlayers);
+
   renderSection('bat-grid','bat-count', batters, false);
   renderSection('pit-grid','pit-count', pitchers, true);
+}
+
+// ── 14-DAY STATS ──
+async function loadPlayerStats(players){
+  setLoad('Loading 14-day stats...');
+  // Look up MLB IDs via name search, then fetch rolling stats
+  await Promise.allSettled(players.map(async p=>{
+    try{
+      // Search MLB people API by name
+      const search = await fetch('https://statsapi.mlb.com/api/v1/people/search?names='+encodeURIComponent(p.name)+'&sportId=1');
+      const sd = await search.json();
+      const person = sd.people?.[0];
+      if(!person) return;
+      p.mlbId = person.id;
+
+      // Fetch last 14 days stats
+      const group = p.isPitch ? 'pitching' : 'hitting';
+      const sres = await fetch(API+'/api/playerstats?playerId='+person.id+'&days=14');
+      const sdata = await sres.json();
+      const statGroup = sdata.stats?.find(s=>s.group?.displayName?.toLowerCase()===group);
+      const splits = statGroup?.splits?.[0]?.stat;
+      if(!splits) return;
+
+      if(!p.isPitch){
+        p.last14 = {
+          avg:  parseFloat(splits.avg)||null,
+          obp:  parseFloat(splits.obp)||null,
+          slg:  parseFloat(splits.slg)||null,
+          ops:  parseFloat(splits.ops)||null,
+          hr:   parseInt(splits.homeRuns)||null,
+          rbi:  parseInt(splits.rbi)||null,
+          h:    parseInt(splits.hits)||null,
+        };
+      } else {
+        p.last14 = {
+          era:  parseFloat(splits.era)||null,
+          ip:   parseFloat(splits.inningsPitched)||null,
+          k:    parseInt(splits.strikeOuts)||null,
+          bb:   parseInt(splits.baseOnBalls)||null,
+          whip: parseFloat(splits.whip)||null,
+        };
+      }
+    }catch(e){}
+  }));
 }
 
 // ── RENDER ──
@@ -510,14 +561,40 @@ function makeCard(p, isPitch){
 
   // Matchup block
   const matchupHtml = m
-  ? `<div class="pc-opp">
-      <div class="opp-lbl">vs today</div>
-      <div class="opp-name">${m.name}</div>
-      ${m.hand?`<span class="opp-hand hand-${m.hand}">${m.hand}</span>`:`<span style="font-size:9px;color:var(--muted);font-family:monospace">hand TBD</span>`}
-     </div>`
-  : `<div class="nogame-txt">No game today</div>`;
+    ? `<div class="pc-opp">
+        <div class="opp-lbl">vs today</div>
+        <div class="opp-name">${m.name}</div>
+        <span class="opp-hand hand-${m.hand||'?'}">${m.hand||'?'}</span>
+       </div>`
+    : `<div class="nogame-txt">No game today</div>`;
 
   const statusHtml = p.status?`<span class="pc-status">${p.status}</span>`:'';
+
+  // 14-day stats block
+  let last14Html = '';
+  if(p.last14){
+    if(!isPitch){
+      const l = p.last14;
+      last14Html = `
+        <div class="pc-div-soft"></div>
+        <div class="pc-window-lbl">Last 14 Days</div>
+        <div class="pc-stats">
+          <div class="stat-row"><span class="stat-lbl">AVG</span><span class="stat-val ${scBA(l.avg)}">${l.avg!=null?l.avg.toFixed(3):'—'}</span></div>
+          <div class="stat-row"><span class="stat-lbl">OPS</span><span class="stat-val ${scOPS(l.ops)}">${l.ops!=null?l.ops.toFixed(3):'—'}</span></div>
+          <div class="stat-row-sm"><span class="stat-lbl-sm">HR</span><span class="stat-val-sm">${l.hr!=null?l.hr:'—'}</span><span class="stat-lbl-sm" style="margin-left:8px">RBI</span><span class="stat-val-sm">${l.rbi!=null?l.rbi:'—'}</span><span class="stat-lbl-sm" style="margin-left:8px">H</span><span class="stat-val-sm">${l.h!=null?l.h:'—'}</span></div>
+        </div>`;
+    } else {
+      const l = p.last14;
+      last14Html = `
+        <div class="pc-div-soft"></div>
+        <div class="pc-window-lbl">Last 14 Days</div>
+        <div class="pc-stats">
+          <div class="stat-row"><span class="stat-lbl">ERA</span><span class="stat-val ${scERA(l.era)}">${l.era!=null?l.era.toFixed(2):'—'}</span></div>
+          <div class="stat-row"><span class="stat-lbl">WHIP</span><span class="stat-val ${scWHIP(l.whip)}">${l.whip!=null?l.whip.toFixed(2):'—'}</span></div>
+          <div class="stat-row-sm"><span class="stat-lbl-sm">K</span><span class="stat-val-sm">${l.k!=null?l.k:'—'}</span><span class="stat-lbl-sm" style="margin-left:8px">BB</span><span class="stat-val-sm">${l.bb!=null?l.bb:'—'}</span><span class="stat-lbl-sm" style="margin-left:8px">IP</span><span class="stat-val-sm">${l.ip!=null?l.ip:'—'}</span></div>
+        </div>`;
+    }
+  }
 
   return`<div class="pcard ${edge}">
     <div class="pc-top">
@@ -526,6 +603,7 @@ function makeCard(p, isPitch){
     </div>
     <div class="pc-team">${p.team}</div>
     ${statsHtml}
+    ${last14Html}
     <div class="pc-div"></div>
     ${matchupHtml}
   </div>`;
@@ -544,6 +622,11 @@ function sc(v,type){
   if(type==='kpct')   return v>=28?'sv-great':v>=24?'sv-good':v>=20?'sv-avg':'sv-poor';
   return 'sv-avg';
 }
+
+function scBA(v){ if(v==null) return 'sv-na'; return v>=.300?'sv-great':v>=.270?'sv-good':v>=.240?'sv-avg':v>=.210?'sv-poor':'sv-bad'; }
+function scOPS(v){ if(v==null) return 'sv-na'; return v>=.900?'sv-great':v>=.800?'sv-good':v>=.700?'sv-avg':v>=.600?'sv-poor':'sv-bad'; }
+function scERA(v){ if(v==null) return 'sv-na'; return v<=2.5?'sv-great':v<=3.5?'sv-good':v<=4.5?'sv-avg':v<=5.5?'sv-poor':'sv-bad'; }
+function scWHIP(v){ if(v==null) return 'sv-na'; return v<=1.0?'sv-great':v<=1.2?'sv-good':v<=1.35?'sv-avg':v<=1.5?'sv-poor':'sv-bad'; }
 
 function setStatus(type,text){
   const d=document.getElementById('sdot');
