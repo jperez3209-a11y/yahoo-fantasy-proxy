@@ -1,11 +1,12 @@
 {
   "version": 2,
   "functions": {
-    "api/token.js":    { "memory": 128, "maxDuration": 10 },
-    "api/yahoo.js":    { "memory": 128, "maxDuration": 15 },
-    "api/savant.js":   { "memory": 256, "maxDuration": 30 },
-    "api/schedule.js": { "memory": 128, "maxDuration": 10 },
-    "api/splits.js":   { "memory": 256, "maxDuration": 30 }
+    "api/token.js":       { "memory": 128, "maxDuration": 10 },
+    "api/yahoo.js":       { "memory": 128, "maxDuration": 15 },
+    "api/savant.js":      { "memory": 256, "maxDuration": 30 },
+    "api/schedule.js":    { "memory": 128, "maxDuration": 30 },
+    "api/splits.js":      { "memory": 256, "maxDuration": 30 },
+    "api/playerstats.js": { "memory": 128, "maxDuration": 15 }
   },
   "routes": [
     { "src": "/api/(.*)", "dest": "/api/$1" },
