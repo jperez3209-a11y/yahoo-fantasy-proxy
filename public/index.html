@@ -359,15 +359,17 @@ async function loadSchedule(){
     const today=new Date().toISOString().split('T')[0];
     const res=await fetch(API+'/api/schedule?date='+today);
     const data=await res.json();
-    const games=data.games||[];
+    const games=data.games||[];console.log('Schedule teams:', games.map(g=>g.away.team+'@'+g.home.team).join(', '));
 
     games.forEach(g=>{
       const aAbb=MLB_ABB[g.away.team]||g.away.team;
       const hAbb=MLB_ABB[g.home.team]||g.home.team;
-      // Batter on home team faces away pitcher, and vice versa
       if(g.away.probablePitcher) ST.teamToPitcher[hAbb]={name:g.away.probablePitcher.name,hand:g.away.probablePitcher.throws};
       if(g.home.probablePitcher) ST.teamToPitcher[aAbb]={name:g.home.probablePitcher.name,hand:g.home.probablePitcher.throws};
-    });
+      // Also store by raw abbreviation as fallback
+      if(g.away.probablePitcher) ST.teamToPitcher[g.home.team]={name:g.away.probablePitcher.name,hand:g.away.probablePitcher.throws};
+      if(g.home.probablePitcher) ST.teamToPitcher[g.away.team]={name:g.home.probablePitcher.name,hand:g.home.probablePitcher.throws};
+   });
 
     const out=document.getElementById('games-out');
     if(!games.length){ out.textContent='No games today'; return; }
