@@ -364,12 +364,13 @@ async function loadSchedule(){
     games.forEach(g=>{
       const aAbb=MLB_ABB[g.away.team]||g.away.team;
       const hAbb=MLB_ABB[g.home.team]||g.home.team;
-      if(g.away.probablePitcher) ST.teamToPitcher[hAbb]={name:g.away.probablePitcher.name,hand:g.away.probablePitcher.throws};
-      if(g.home.probablePitcher) ST.teamToPitcher[aAbb]={name:g.home.probablePitcher.name,hand:g.home.probablePitcher.throws};
-      // Also store by raw abbreviation as fallback
-      if(g.away.probablePitcher) ST.teamToPitcher[g.home.team]={name:g.away.probablePitcher.name,hand:g.away.probablePitcher.throws};
-      if(g.home.probablePitcher) ST.teamToPitcher[g.away.team]={name:g.home.probablePitcher.name,hand:g.home.probablePitcher.throws};
-   });
+      // Home batters face away pitcher (or TBD if not announced)
+      ST.teamToPitcher[hAbb]={name:g.away.probablePitcher?.name||'TBD',hand:g.away.probablePitcher?.throws||null,hasGame:true};
+      ST.teamToPitcher[g.home.team]={name:g.away.probablePitcher?.name||'TBD',hand:g.away.probablePitcher?.throws||null,hasGame:true};
+      // Away batters face home pitcher (or TBD if not announced)
+      ST.teamToPitcher[aAbb]={name:g.home.probablePitcher?.name||'TBD',hand:g.home.probablePitcher?.throws||null,hasGame:true};
+      ST.teamToPitcher[g.away.team]={name:g.home.probablePitcher?.name||'TBD',hand:g.home.probablePitcher?.throws||null,hasGame:true};
+    });
 
     const out=document.getElementById('games-out');
     if(!games.length){ out.textContent='No games today'; return; }
@@ -509,12 +510,12 @@ function makeCard(p, isPitch){
 
   // Matchup block
   const matchupHtml = m
-    ? `<div class="pc-opp">
-        <div class="opp-lbl">vs today</div>
-        <div class="opp-name">${m.name}</div>
-        <span class="opp-hand hand-${m.hand||'?'}">${m.hand||'?'}</span>
-       </div>`
-    : `<div class="nogame-txt">No game today</div>`;
+  ? `<div class="pc-opp">
+      <div class="opp-lbl">vs today</div>
+      <div class="opp-name">${m.name}</div>
+      ${m.hand?`<span class="opp-hand hand-${m.hand}">${m.hand}</span>`:`<span style="font-size:9px;color:var(--muted);font-family:monospace">hand TBD</span>`}
+     </div>`
+  : `<div class="nogame-txt">No game today</div>`;
 
   const statusHtml = p.status?`<span class="pc-status">${p.status}</span>`:'';
 
