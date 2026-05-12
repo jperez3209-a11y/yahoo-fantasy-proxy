@@ -359,7 +359,7 @@ async function loadSchedule(){
     const today=new Date().toISOString().split('T')[0];
     const res=await fetch(API+'/api/schedule?date='+today);
     const data=await res.json();
-    const games=data.games||[];console.log('Raw game 0:', JSON.stringify(data.games[0], null, 2));
+    const games=data.games||[];
 
     games.forEach(g=>{
       const aAbb=MLB_ABB[g.away.team]||g.away.team;
